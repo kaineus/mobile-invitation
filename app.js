@@ -18,6 +18,7 @@ const couple = `${data.groom.name} · ${data.bride.name}`;
 document.title = `${couple}, 부부가 됩니다`;
 text('[data-groom]', data.groom.name);
 text('[data-bride]', data.bride.name);
+text('#english-names', `${data.groom.english} & ${data.bride.english}`);
 text('[data-date]', dateLabel);
 text('#stamp-month', new Intl.DateTimeFormat('en', { month: 'short', timeZone: 'Asia/Seoul' }).format(date));
 text('#stamp-day', day);

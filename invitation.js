@@ -1,8 +1,8 @@
 // 결혼 알림장의 내용은 이 파일에서 수정하세요.
 export const announcement = {
   welcomeConfetti: true,
-  groom: { name: '나동규', english: 'Donggyu' },
-  bride: { name: '이엄지', english: 'Eomji' },
+  groom: { name: '나동규', english: 'Wayne' },
+  bride: { name: '이엄지', english: 'Thumb' },
   // 결혼식을 진행하지 않으므로 시간 없는 날짜를 사용합니다.
   date: '2027-02-14',
   message: [

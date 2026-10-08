@@ -143,6 +143,12 @@ p,h1,h2 {
   color:#8ba1bd;
 }
 
+.english-names {
+  margin-top:12px;
+  font:italic 16px/1.5 Georgia,serif;
+  color:var(--blue);
+}
+
 .cover-wrap {
   position:relative;
   margin:35px 8px 25px;
