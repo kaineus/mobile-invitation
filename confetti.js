@@ -1,4 +1,4 @@
-// Two celebratory bursts. No external library or persistent animation.
+// One generous, energetic burst. No external library or persistent animation.
 export function playWelcomeConfetti() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (reducedMotion.matches || document.hidden) return;
@@ -20,7 +20,7 @@ export function playWelcomeConfetti() {
   const paper = document.querySelector('.paper').getBoundingClientRect();
   const spread = Math.min(paper.width, width);
   const colors = ['#5f88b4', '#91b8d8', '#d393a3', '#c6a052', '#e6c877'];
-  const count = width < 540 ? 170 : 230;
+  const count = width < 540 ? 310 : 420;
   const launchHeight = Math.min(height * 0.78, 650);
   const random = (min, max) => min + Math.random() * (max - min);
   const particles = Array.from({ length: count }, (_, index) => {
@@ -28,10 +28,9 @@ export function playWelcomeConfetti() {
     return {
       x: fromLeft ? paper.left + 8 : paper.right - 8,
       y: launchHeight,
-      vx: (fromLeft ? 1 : -1) * random(spread * 0.65, spread * 1.65),
-      vy: -random(launchHeight * 1.05, launchHeight * 1.35),
-      delay: random(0, 0.06) + (index < count * 0.6 ? 0 : 0.42),
-      size: random(5, 11),
+      vx: (fromLeft ? 1 : -1) * random(spread * 0.85, spread * 1.95),
+      vy: -random(launchHeight * 1.2, launchHeight * 1.55),
+      size: random(5, 12),
       rotation: random(0, Math.PI * 2),
       spin: random(-11, 11),
       phase: random(0, Math.PI * 2),
@@ -53,17 +52,17 @@ export function playWelcomeConfetti() {
 
   function draw(timestamp) {
     startedAt ??= timestamp;
-    // A quick opening volley, followed by another burst 420 ms later.
+    // Launch every piece together so this reads as one emphatic pop.
     const elapsed = (timestamp - startedAt - 250) / 1000;
     if (elapsed >= 5.4) { stop(); return; }
     context.clearRect(0, 0, width, height);
 
     for (const particle of particles) {
-      const age = elapsed - particle.delay;
+      const age = elapsed;
       if (age < 0) continue;
-      const x = particle.x + particle.vx * (1 - Math.exp(-1.1 * age)) / 1.1
+      const x = particle.x + particle.vx * (1 - Math.exp(-1.5 * age)) / 1.5
         + Math.sin(age * 3 + particle.phase) * age * 8;
-      const y = particle.y + particle.vy * age + 225 * age * age;
+      const y = particle.y + particle.vy * age + 280 * age * age;
       if (y > height + 20) continue;
 
       context.save();
