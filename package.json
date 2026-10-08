@@ -1,0 +1,13 @@
+{
+  "name": "mobile-invitation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "lint": "node --check app.js && node --check invitation.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs dist"
+  },
+  "engines": { "node": ">=22" }
+}
