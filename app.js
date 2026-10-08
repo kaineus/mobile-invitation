@@ -1,4 +1,5 @@
 import { announcement as data } from './invitation.js';
+import { playWelcomeConfetti } from './confetti.js';
 
 const $ = (selector) => document.querySelector(selector);
 const text = (selector, value) => document.querySelectorAll(selector).forEach((node) => { node.textContent = value; });
@@ -179,3 +180,5 @@ $('#share').addEventListener('click', async () => {
   }
   await copy(url.href);
 });
+
+if (data.welcomeConfetti !== false) playWelcomeConfetti();

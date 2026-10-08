@@ -7,7 +7,7 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(announcement.date) || !Number.isFinite(day.getTi
 }
 if (!announcement.groom.name || !announcement.bride.name) throw new Error('두 사람의 이름을 입력하세요.');
 await mkdir('dist', { recursive: true });
-for (const file of ['styles.css', 'app.js', 'invitation.js', 'assets']) await cp(file, `dist/${file}`, { recursive: true });
+for (const file of ['styles.css', 'app.js', 'confetti.js', 'invitation.js', 'assets']) await cp(file, `dist/${file}`, { recursive: true });
 const escape = (value) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const title = escape(`${announcement.groom.name} · ${announcement.bride.name}, 부부가 됩니다`);
 const description = escape(`${new Intl.DateTimeFormat('ko-KR', { timeZone: 'UTC', dateStyle: 'long' }).format(day)}, 소중한 분들께 저희의 결혼 소식을 전합니다. 별도의 결혼식은 진행하지 않습니다.`);
