@@ -1,14 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Manrope:wght@400;500;600&display=swap');
+/* Colours are sampled from the photographs: the noon sky, the hill, the dress, the heart balloon. */
 :root {
-  --page:#e9eef4;
-  --paper:#fdfefe;
-  --ink:#303e50;
-  --muted:#66778b;
-  --blue:#54749d;
-  --pale:#f0f4f9;
-  --line:#dce4ed;
-  --serif:'Gowun Batang',Batang,Georgia,serif;
-  --sans:'Manrope','Malgun Gothic',sans-serif;
+  --sky-top:#034c86;
+  --sky:#1870af;
+  --sky-low:#4d92c2;
+  --grass:#4d5a37;
+  --paper:#fbfcfd;
+  --ink:#14212e;
+  --muted:#5a6a7a;
+  --red:#e5343b;
+  --noon:#dcebf7;
+  --afternoon:#edf1d9;
+  --sunset:#f8e0ca;
+  --night:#081527;
+  --gutter:28px;
+  --font:'Hahmlet','Noto Serif KR',AppleMyungjo,Batang,serif;
 }
 
 * {
@@ -17,27 +22,44 @@
 
 html {
   scroll-behavior:smooth;
-  scroll-padding-top:24px;
+}
+
+html.viewer-open {
+  overflow:hidden;
 }
 
 body {
   margin:0;
-  background:var(--page);
+  background:#e3e9ee;
   color:var(--ink);
-  font-family:var(--serif);
-  font-size:15px;
+  font-family:var(--font);
+  font-size:16px;
+  line-height:1.8;
+  word-break:keep-all;
   -webkit-font-smoothing:antialiased;
+  -webkit-text-size-adjust:100%;
 }
 
-button,a,input {
-  -webkit-tap-highlight-color:transparent;
+p,h1,h2,h3,figure,ul {
+  margin:0;
+}
+
+ul {
+  padding:0;
+  list-style:none;
+}
+
+img {
+  display:block;
 }
 
 button,input {
   font:inherit;
+  color:inherit;
 }
 
 button,a {
+  -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 
@@ -50,469 +72,594 @@ a {
   text-decoration:none;
 }
 
-button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible {
-  outline:2px solid var(--blue);
-  outline-offset:5px;
-}
-
 [hidden] {
   display:none!important;
 }
 
-button:disabled {
-  cursor:default;
+/* A white ring inside a dark one stays visible on sky, paper, grass, and night alike. */
+:focus-visible {
+  outline:2px solid #fff;
+  outline-offset:2px;
+  box-shadow:0 0 0 5px var(--ink);
 }
 
-p,h1,h2 {
-  margin:0;
-}
-
-.paper {
-  max-width:520px;
-  margin:32px auto;
-  background:var(--paper);
-  box-shadow:0 12px 70px #354d6910;
-  overflow:hidden;
-}
-
-.masthead {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:23px 30px;
-  gap:12px;
-}
-
-.masthead>span {
-  font-size:11px;
-  color:var(--muted);
-  letter-spacing:.1em;
-}
-
-.monogram {
-  font:italic 31px Georgia,serif;
-  letter-spacing:-3px;
-  color:var(--blue);
-}
-
-.monogram span {
-  font-size:18px;
-  padding:0 3px;
-}
-
-.header-link {
-  font:11px var(--sans);
-  color:var(--muted);
-  padding:12px 0;
-}
-
-.header-link span {
-  margin-left:4px;
-}
-
-.hero {
-  text-align:center;
-  padding:28px 32px 0;
-}
-
-.handwriting {
-  font:italic 43px/1.15 Georgia,serif;
-  color:var(--blue);
-  letter-spacing:-2px;
-}
-
-.hero h1 {
-  font-weight:400;
-  font-size:21px;
-  letter-spacing:.22em;
-  margin:24px 0 21px;
-  padding-left:.22em;
-}
-
-.couple-names {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:22px;
-  font-size:19px;
-  letter-spacing:.16em;
-}
-
-.tiny-flower {
-  font-size:14px;
-  color:#8ba1bd;
-}
-
-.english-names {
-  margin-top:12px;
-  font:italic 16px/1.5 Georgia,serif;
-  color:var(--blue);
-}
-
-.cover-wrap {
-  position:relative;
-  margin:35px 8px 25px;
-}
-
-.cover {
-  aspect-ratio:3/3.6;
-  border-radius:180px 180px 3px 3px;
-  overflow:hidden;
-}
-
-.photo-placeholder {
-  display:grid;
-  place-items:center;
-  background:#e9eef4;
-  position:relative;
-}
-
-.photo-placeholder::after {
-  content:'';
-  position:absolute;
-  inset:12px;
-  border:1px solid #ffffffa8;
-  border-radius:inherit;
-  pointer-events:none;
-}
-
-.placeholder-caption {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-  color:#6b7e94;
-  font-size:11px;
-  letter-spacing:.06em;
-}
-
-.placeholder-caption svg {
-  width:30px;
-  height:30px;
-  stroke:#8b9db2;
-  stroke-width:1;
-}
-
-.placeholder-caption i {
-  width:48px;
-  height:4px;
-  border-radius:3px;
-  background:#d5dfeb;
-}
-
-.cover img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
-.date-stamp {
-  position:absolute;
-  right:-18px;
-  bottom:29px;
-  width:78px;
-  height:96px;
-  background:#fcfdff;
-  box-shadow:0 3px 17px #47618113;
-  border:1px solid var(--line);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  transform:rotate(5deg);
-  color:var(--blue);
-}
-
-.date-stamp span {
-  font:11px/1.6 var(--sans);
-}
-
-.date-stamp strong {
-  font:34px/1.2 Georgia,serif;
-}
-
-.hero-details {
-  font-size:13px;
-  line-height:2;
-  color:#586a80;
-}
-
-.hero-details p+p {
-  font-size:12px;
-  color:var(--muted);
-}
-
-.scroll-hint {
-  display:inline-grid;
-  place-items:center;
-  width:48px;
-  height:60px;
-  color:#7f95b0;
-  margin-top:11px;
-  font-size:23px;
-}
-
-.section {
-  padding:66px 38px;
-  text-align:center;
-}
-
-.section-script {
-  font:italic 25px/1.3 Georgia,serif;
-  color:var(--blue);
-  letter-spacing:-.5px;
-  margin-bottom:14px;
+.lead:focus-visible,.strip-photo:focus-visible {
+  outline-offset:-5px;
+  box-shadow:inset 0 0 0 3px var(--ink);
 }
 
 h2 {
-  font-size:22px;
-  font-weight:400;
-  letter-spacing:.07em;
+  font-size:1.625rem;
+  font-weight:600;
+  line-height:1.35;
+  letter-spacing:-.02em;
 }
 
-.section-description {
-  font-size:12px;
-  line-height:1.9;
-  color:var(--muted);
-  margin-top:17px;
+.paper {
+  max-width:480px;
+  margin:0 auto;
+  background:var(--paper);
+  overflow:hidden;
 }
 
-.line-flower {
-  color:#9bacbf;
-  font-size:30px;
-  margin-bottom:33px;
+/* Cover: the bow fills the first screen and the greeting sits in the open sky. */
+.cover {
+  position:relative;
+  height:100svh;
+  min-height:540px;
+  max-height:980px;
+  color:#fff;
+  background:linear-gradient(var(--sky-top),var(--sky) 55%,var(--sky-low) 83%,var(--grass) 84%);
 }
 
+.cover-photo {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:30% 100%;
+}
+
+.cover-copy {
+  position:relative;
+  padding:calc(env(safe-area-inset-top) + 11svh) var(--gutter) 0;
+}
+
+.cover h1 {
+  font-size:clamp(2.75rem,13.5vw,4rem);
+  font-weight:700;
+  line-height:1.15;
+  letter-spacing:-.035em;
+}
+
+.cover-line {
+  margin-top:18px;
+  font-size:1.0625rem;
+  font-weight:500;
+}
+
+.cover-date {
+  margin-top:2px;
+  font-size:.875rem;
+  opacity:.86;
+}
+
+.cover-next {
+  position:absolute;
+  left:50%;
+  bottom:calc(env(safe-area-inset-bottom) + 10px);
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  margin-left:-24px;
+  border-radius:50%;
+}
+
+.cover-next svg {
+  width:26px;
+  height:26px;
+  stroke:#fff;
+  stroke-width:1.5;
+}
+
+/* Letter */
 .letter {
-  padding-top:32px;
-  padding-bottom:72px;
+  padding:76px var(--gutter) 84px;
 }
 
 .letter-message {
+  margin-top:28px;
+  font-size:.96875rem;
+  line-height:2.15;
   white-space:pre-line;
-  font-size:14px;
-  line-height:2.2;
-  margin:31px -6px 37px;
-  word-break:keep-all;
 }
 
-.calendar-section {
-  background:var(--pale);
+.letter-sign {
+  margin-top:40px;
+  font-weight:600;
+  color:var(--sky-top);
+}
+
+/* The day, on a block of the same sky */
+.date {
+  padding:68px var(--gutter) 72px;
+  background:linear-gradient(var(--sky-top),var(--sky));
+  color:#fff;
+}
+
+.date-line {
+  margin-top:6px;
+  font-size:.875rem;
+  opacity:.84;
 }
 
 .calendar {
-  margin:30px auto 22px;
-  max-width:330px;
-}
-
-.calendar-month {
-  font:20px Georgia,serif;
-  margin-bottom:20px;
-  color:var(--blue);
-}
-
-table {
   width:100%;
+  margin-top:34px;
   table-layout:fixed;
   border-collapse:collapse;
-  font:12px var(--sans);
-}
-
-th {
-  font-size:10px;
-  color:var(--muted);
-  font-weight:500;
-  height:32px;
-}
-
-td {
-  height:40px;
   text-align:center;
 }
 
-td:first-child,th:first-child {
-  color:#a26470;
+.calendar th {
+  height:34px;
+  font-size:.75rem;
+  font-weight:400;
+  opacity:.74;
 }
 
-td span {
-  width:34px;
-  height:34px;
+.calendar td {
+  height:48px;
+  padding:0;
+  font-size:.9375rem;
+}
+
+.calendar td:first-child,.calendar th:first-child {
+  color:#ffd0db;
+}
+
+.calendar td span {
   display:inline-grid;
   place-items:center;
+  width:46px;
+  height:46px;
 }
 
-td .wedding-day {
-  background:var(--blue);
-  color:white;
-  border-radius:50%;
-  position:relative;
-}
-
-td .wedding-day::after {
-  content:'♥';
-  font-size:9px;
-  position:absolute;
-  bottom:-11px;
-  color:var(--blue);
+/* The date is written on a red heart balloon like the ones the two are holding. */
+.calendar .wedding-day {
+  padding-bottom:5px;
+  color:#fff;
+  font-weight:700;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath fill='%23e5343b' d='M12 21.2S3.9 16.3 1.3 11.2C-.6 7.400 1.300 2.800 5.800 2.800c2.500 0 4.500 1.400 6.200 3.700 1.700-2.300 3.700-3.700 6.200-3.700 4.500 0 6.400 4.600 4.500 8.400C20.100 16.300 12 21.200 12 21.200z'/%3E%3C/svg%3E") center/contain no-repeat;
 }
 
 .countdown {
-  font-size:13px;
-  margin:27px 0 22px;
-  line-height:1.9;
-  word-break:keep-all;
+  margin-top:26px;
+  font-size:.9375rem;
 }
 
 .countdown strong {
-  color:var(--blue);
-  font:600 17px var(--sans);
-  margin:0 3px;
+  margin:0 2px;
+  font-size:1.5rem;
+  font-weight:700;
+  letter-spacing:-.02em;
+}
+
+.date .button {
+  margin-top:18px;
+}
+
+.date-note {
+  margin-top:22px;
+  font-size:.8125rem;
+  opacity:.8;
 }
 
 .button {
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
-  min-height:46px;
-  padding:12px 22px;
-  font:12px/1.5 var(--sans);
-  border-radius:4px;
+  min-height:48px;
+  padding:0 24px;
   border:1px solid transparent;
-  transition:background .2s;
+  border-radius:999px;
+  font-size:.875rem;
+  font-weight:600;
+  line-height:1.4;
 }
 
-.button-outline {
-  border-color:#c9d4e2;
+.button-light {
   background:transparent;
-  color:#465f7f;
-}
-
-.button-outline:hover {
-  background:#e6edf6;
-}
-
-.button-primary {
-  background:var(--blue);
+  border-color:#ffffff8c;
   color:#fff;
 }
 
-.button-primary:hover {
-  background:#45648b;
+.button-white {
+  background:#fff;
+  color:var(--ink);
 }
 
-.gallery-section {
-  padding-left:26px;
-  padding-right:26px;
+.button-blue {
+  background:var(--sky-top);
+  color:#fff;
 }
 
-.gallery {
-  margin-top:30px;
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-}
-
-.gallery-slot {
-  aspect-ratio:4/5;
-  border-radius:2px;
-  border:0;
+/* Photographs: a full-width lead, then a row to swipe through. */
+.lead,.strip-photo {
+  display:block;
   padding:0;
+  border:0;
+  background:#c7d2dc;
   overflow:hidden;
 }
 
-.gallery-slot:nth-child(3),.gallery-slot:nth-child(6) {
-  background:#e5ebf2;
+.lead {
+  width:100%;
+  aspect-ratio:2/3;
 }
 
-.gallery-slot .placeholder-caption {
-  gap:9px;
-  font:10px var(--sans);
-  color:#7b8da4;
+.lead-wide {
+  aspect-ratio:3/2;
 }
 
-.gallery-slot .placeholder-caption svg {
-  width:23px;
-  height:23px;
+.lead-intro {
+  aspect-ratio:4/3;
 }
 
-.gallery-slot img {
+.lead img,.strip-photo img {
   width:100%;
   height:100%;
   object-fit:cover;
-  display:block;
-  transition:transform .35s;
 }
 
-.gallery-slot:hover img {
-  transform:scale(1.03);
+.strip {
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+  overflow-x:auto;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
 }
 
-.gallery-note {
-  font-size:11px;
+.strip-photo {
+  flex:0 0 54%;
+  max-width:260px;
+  aspect-ratio:2/3;
+  scroll-snap-align:start;
+}
+
+@media (hover:none) {
+  .strip {
+    scrollbar-width:none;
+  }
+
+  .strip::-webkit-scrollbar {
+    display:none;
+  }
+}
+
+.photo-missing {
+  display:grid;
+  place-items:center;
+  padding:16px;
   color:var(--muted);
-  margin-top:21px;
+  font-size:.8125rem;
 }
 
-.footer {
-  background:#e8eff7;
+/* Introductions */
+.intro {
+  padding-top:76px;
+}
+
+.intro h2 {
+  padding:0 var(--gutter) 28px;
+}
+
+.intro-names {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  padding:22px 12px 30px;
   text-align:center;
-  padding:48px 30px 36px;
 }
 
-.footer-flower {
-  font-size:32px;
-  color:#7c96b6;
+.intro-names p {
+  display:flex;
+  flex-direction:column;
+  line-height:1.5;
 }
 
-.footer>p {
-  font-size:14px;
-  line-height:2;
-  margin-top:23px;
+.intro-names span {
+  font-size:.8125rem;
+  color:var(--muted);
 }
 
-.footer .footer-names {
-  margin:18px 0 28px;
-  font-size:13px;
-  letter-spacing:.08em;
+.intro-names strong {
+  font-size:1.375rem;
+  font-weight:600;
+  letter-spacing:-.01em;
 }
 
-.share-button {
+.intro-names em {
+  font-size:.875rem;
+  font-style:italic;
+  color:var(--sky-top);
+}
+
+.intro-names small {
+  margin-top:6px;
+  font-size:.8125rem;
+  color:var(--muted);
+}
+
+/* One day together: the page takes the colour of the sky as it passes from noon to night. */
+.day-head {
+  padding:84px var(--gutter) 0;
+}
+
+.day-head p {
+  margin-top:6px;
+  font-size:.875rem;
+  color:var(--muted);
+}
+
+.chapter {
+  padding:96px 0 60px;
+}
+
+.chapter-noon {
+  padding-top:72px;
+  background:linear-gradient(var(--paper),var(--noon) 120px);
+}
+
+.chapter-afternoon {
+  background:linear-gradient(var(--noon),var(--afternoon) 120px);
+}
+
+.chapter-sunset {
+  background:linear-gradient(var(--afternoon),var(--sunset) 120px);
+}
+
+.chapter-night {
+  padding-top:250px;
+  padding-bottom:0;
+  background:linear-gradient(var(--sunset),#e3a3a0 70px,#6d5687 150px,var(--night) 232px);
+  color:#eef3fb;
+}
+
+.chapter-time {
+  padding:0 var(--gutter);
+  font-size:2.5rem;
+  font-weight:700;
+  line-height:1.2;
+  letter-spacing:-.035em;
+}
+
+.chapter-line {
+  padding:6px var(--gutter) 26px;
+}
+
+.dawn {
+  padding:88px var(--gutter) 92px;
+  background:linear-gradient(var(--night),#052f59 55%,#02508b);
+  color:#fff;
+  font-size:1.125rem;
+  font-weight:500;
+  white-space:pre-line;
+}
+
+/* Closing: the second bow, a thank-you. */
+.closing {
+  position:relative;
+  color:#fff;
+  background:#02508b;
+}
+
+.closing img {
   width:100%;
-  max-width:320px;
+  aspect-ratio:2/3;
+  object-fit:cover;
 }
 
-.share-button svg {
-  width:17px;
-  height:17px;
-  stroke:currentColor;
-  stroke-width:1.4;
+.closing-copy {
+  position:absolute;
+  inset:0 0 auto;
+  padding:8px var(--gutter) 0;
 }
 
-.footer-signature {
-  display:block;
-  font:italic 17px Georgia,serif;
-  color:#7289a5;
-  margin-top:32px;
+.closing h2 {
+  font-size:clamp(2.25rem,11vw,3.25rem);
+  font-weight:700;
+  line-height:1.15;
+  letter-spacing:-.035em;
+}
+
+.closing p {
+  margin-top:16px;
+  font-size:.9375rem;
+  white-space:pre-line;
+}
+
+/* The ground they stand on carries the last words and the share buttons. */
+.ground {
+  padding:36px var(--gutter) calc(env(safe-area-inset-bottom) + 44px);
+  background:linear-gradient(#56613c,#3d4829);
+  color:#fff;
+}
+
+.ground-sign {
+  font-weight:600;
+}
+
+.ground-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:26px;
+}
+
+.ground-nick {
+  margin-top:44px;
+  font-size:.875rem;
+  font-style:italic;
+  opacity:.78;
+}
+
+.accounts {
+  margin-top:40px;
+}
+
+.accounts h2 {
+  font-size:1.125rem;
+}
+
+.accounts li {
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:2px 12px;
+  padding:14px 0;
+  border-bottom:1px solid #ffffff33;
+  font-size:.875rem;
+}
+
+.account-label {
+  grid-column:1;
+  opacity:.8;
+}
+
+.account-number {
+  grid-column:1;
+  font-weight:600;
+}
+
+.account-copy {
+  grid-column:2;
+  grid-row:1 / span 2;
+  min-height:44px;
+  padding:0 16px;
+  border:1px solid #ffffff8c;
+  border-radius:999px;
+  background:transparent;
+  font-size:.8125rem;
+}
+
+/* Full-screen photo viewer */
+dialog {
+  border:0;
+  padding:0;
+}
+
+.viewer {
+  width:100vw;
+  height:100dvh;
+  max-width:none;
+  max-height:none;
+  margin:0;
+  background:#050d18;
+  color:#fff;
+  overflow:hidden;
+}
+
+.viewer[open] {
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+}
+
+.viewer-bar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:calc(env(safe-area-inset-top) + 8px) 8px 8px 20px;
+  font-size:.875rem;
+}
+
+.viewer-bar button,.viewer-nav {
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+}
+
+.viewer svg {
+  width:24px;
+  height:24px;
+  stroke:#fff;
+  stroke-width:1.6;
+}
+
+#viewer-image {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+.viewer-nav {
+  position:absolute;
+  top:50%;
+  margin-top:-24px;
+  background:#050d1880;
+}
+
+#viewer-prev {
+  left:6px;
+}
+
+#viewer-next {
+  right:6px;
+}
+
+.copy-dialog {
+  width:min(380px,90vw);
+  padding:28px;
+  border-radius:12px;
+  color:var(--ink);
+}
+
+.copy-dialog::backdrop {
+  background:#081527cc;
+}
+
+.copy-dialog h2 {
+  font-size:1.25rem;
+}
+
+.copy-dialog p {
+  margin:10px 0 16px;
+  font-size:.875rem;
+}
+
+.copy-dialog input {
+  width:100%;
+  margin-bottom:18px;
+  padding:12px;
+  border:1px solid #c7d2dc;
+  border-radius:6px;
+  font-size:.875rem;
 }
 
 .toast {
   position:fixed;
-  bottom:max(24px,env(safe-area-inset-bottom));
   left:50%;
-  transform:translate(-50%,12px);
-  opacity:0;
-  visibility:hidden;
-  background:#303e50;
-  color:#fff;
-  padding:13px 20px;
-  border-radius:6px;
-  font:12px/1.6 var(--sans);
+  bottom:calc(env(safe-area-inset-bottom) + 24px);
+  z-index:5;
   width:max-content;
   max-width:calc(100% - 40px);
-  z-index:5;
-  transition:opacity .2s,transform .2s;
+  padding:12px 20px;
+  border-radius:999px;
+  background:var(--ink);
+  color:#fff;
+  font-size:.8125rem;
+  line-height:1.6;
+  opacity:0;
+  visibility:hidden;
+  transform:translate(-50%,12px);
+  transition:opacity .2s,transform .2s,visibility .2s;
 }
 
 .toast.visible {
@@ -521,79 +668,14 @@ td .wedding-day::after {
   transform:translate(-50%,0);
 }
 
-dialog {
-  border:0;
-  padding:0;
-}
-
-dialog::backdrop {
-  background:#172535cc;
-}
-
-.photo-dialog {
-  background:transparent;
-  color:white;
-  max-width:90vw;
-  max-height:90dvh;
-  overflow:visible;
-}
-
-.photo-dialog img {
-  display:block;
-  max-width:90vw;
-  max-height:76dvh;
-  object-fit:contain;
-}
-
-.photo-dialog p {
-  text-align:center;
-  font-size:13px;
-  padding:15px;
-}
-
-.dialog-close {
-  display:block;
-  margin:0 0 8px auto;
-  background:#fff;
-  color:var(--ink);
-  border:0;
-  border-radius:50%;
-  width:44px;
-  height:44px;
-  font-size:28px;
-}
-
-.copy-dialog {
-  width:min(380px,90vw);
-  padding:28px;
-  border-radius:8px;
-}
-
-.copy-dialog h2 {
-  font-size:20px;
-}
-
-.copy-dialog p {
-  font-size:12px;
-  line-height:1.8;
-  margin:15px 0;
-}
-
-.copy-dialog input {
-  width:100%;
-  padding:12px;
-  border:1px solid var(--line);
-  font:13px var(--sans);
-  margin-bottom:18px;
-}
-
 .skip-link {
   position:fixed;
   left:12px;
-  top:-70px;
-  background:white;
-  padding:15px;
+  top:-80px;
   z-index:10;
+  padding:14px 18px;
+  background:#fff;
+  color:var(--ink);
 }
 
 .skip-link:focus {
@@ -601,62 +683,20 @@ dialog::backdrop {
 }
 
 .noscript {
+  padding:20px var(--gutter);
   text-align:center;
-  padding:20px;
 }
 
-.photo-dialog:focus {
-  outline:none;
+.welcome-confetti {
+  position:fixed;
+  inset:0;
+  z-index:4;
+  width:100%;
+  height:100%;
+  pointer-events:none;
 }
 
-@media(max-width:540px) {
-  .paper {
-    margin:0 auto;
-    box-shadow:none;
-  }
-
-  .masthead {
-    padding:20px 25px;
-  }
-
-  .hero {
-    padding-top:26px;
-  }
-
-  .handwriting {
-    font-size:40px;
-  }
-
-}
-
-@media(max-width:360px) {
-  .hero {
-    padding-left:24px;
-    padding-right:24px;
-  }
-
-  .section {
-    padding-left:25px;
-    padding-right:25px;
-  }
-
-  .masthead {
-    padding-left:20px;
-    padding-right:20px;
-  }
-
-  .masthead>span {
-    font-size:10px;
-    letter-spacing:0;
-  }
-
-  .handwriting {
-    font-size:36px;
-  }
-
-}
-
-@media(prefers-reduced-motion:reduce) {
+@media (prefers-reduced-motion:reduce) {
   html {
     scroll-behavior:auto;
   }
@@ -666,31 +706,6 @@ dialog::backdrop {
     animation:none!important;
   }
 
-}
-
-.letter-signature {
-  font-size:15px;
-  letter-spacing:.1em;
-  color:var(--blue);
-}
-
-.calendar-note {
-  margin-top:18px;
-  font-size:11px;
-  line-height:1.8;
-  color:var(--muted);
-}
-
-.welcome-confetti {
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  z-index:4;
-}
-
-@media(prefers-reduced-motion:reduce) {
   .welcome-confetti {
     display:none;
   }

@@ -18,7 +18,9 @@ export function playWelcomeConfetti() {
   document.body.append(canvas);
 
   const paper = document.querySelector('.paper').getBoundingClientRect();
-  const colors = ['#5f88b4', '#91b8d8', '#d393a3', '#c6a052', '#e6c877'];
+  // Picked from the photos so the pieces read against the blue sky:
+  // dress white, hydrangea blue, heart-balloon red, tulip yellow, studio pink.
+  const colors = ['#ffffff', '#bfe0f7', '#e5343b', '#f6c935', '#ffc9d6'];
   const count = width < 540 ? 310 : 420;
   const launchHeight = Math.min(height * 0.78, 650);
   const random = (min, max) => min + Math.random() * (max - min);
