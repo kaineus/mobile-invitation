@@ -11,8 +11,8 @@ if (!/^https:\/\/.+\/$/.test(announcement.siteUrl)) throw new Error('siteUrl은 
 
 // Every photo named in invitation.js must exist in both sizes, or the page would show a gap.
 const photos = [
-  announcement.cover, announcement.closing, announcement.intro.photo, ...announcement.intro.photos,
-  ...announcement.chapters.flatMap((chapter) => [chapter.lead, ...chapter.photos])
+  announcement.cover, announcement.closing, announcement.groom.portrait, announcement.bride.portrait, ...announcement.intro.photos,
+  ...announcement.gallery.flatMap((group) => [group.lead, ...group.photos])
 ];
 const missing = [];
 for (const { id } of photos) {
@@ -21,15 +21,18 @@ for (const { id } of photos) {
     await access(file).catch(() => missing.push(file));
   }
 }
+for (const account of announcement.gift?.accounts ?? []) {
+  if (!account.label || !account.bank || !account.number) throw new Error('gift.accounts 의 각 항목에는 label, bank, number 가 필요합니다.');
+}
 if (missing.length) throw new Error(`사진 파일이 없습니다. scripts/photos.mjs 를 확인하세요:\n${missing.join('\n')}`);
 
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
-for (const file of ['styles.css', 'app.js', 'confetti.js', 'invitation.js', 'assets']) await cp(file, `dist/${file}`, { recursive: true });
+for (const file of ['styles.css', 'app.js', 'confetti.js', 'motion.js', 'invitation.js', 'assets']) await cp(file, `dist/${file}`, { recursive: true });
 // Keep HTML, configuration, and animation in sync when a previous visit is cached.
-const sources = await Promise.all(['app.js', 'confetti.js', 'invitation.js', 'styles.css'].map((file) => readFile(file, 'utf8')));
+const sources = await Promise.all(['app.js', 'confetti.js', 'motion.js', 'invitation.js', 'styles.css'].map((file) => readFile(file, 'utf8')));
 const version = createHash('sha256').update(sources.join('\n')).digest('hex').slice(0, 12);
-await writeFile('dist/app.js', sources[0].replace(/from '(\.\/(?:invitation|confetti)\.js)'/g, (_, path) => `from '${path}?v=${version}'`));
+await writeFile('dist/app.js', sources[0].replace(/from '(\.\/(?:invitation|confetti|motion)\.js)'/g, (_, path) => `from '${path}?v=${version}'`));
 const escape = (value) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const title = escape(`${announcement.groom.name} · ${announcement.bride.name}, 부부가 됩니다`);
 const description = escape(`${new Intl.DateTimeFormat('ko-KR', { timeZone: 'UTC', dateStyle: 'long' }).format(day)}, 소중한 분들께 저희의 결혼 소식을 전합니다. 별도의 결혼식은 진행하지 않습니다.`);

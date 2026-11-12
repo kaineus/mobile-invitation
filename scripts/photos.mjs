@@ -1,10 +1,12 @@
 // 원본 사진(웨딩/ 폴더, 저장소에는 올리지 않음)을 웹용 WebP로 줄여 assets/photos 에 저장합니다.
-// 사용: npm install && npm run photos
+// 사용: npm install && npm run photos            (전부 다시 만들기)
+//       npm run photos -- portrait-bride cover  (적은 id 만 다시 만들기)
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const source = path.resolve(process.argv[2] || '웨딩/웨딩');
+const source = path.resolve('웨딩/웨딩');
+const only = process.argv.slice(2);
 const output = path.resolve('assets/photos');
 const sky = '벨루어/01. 셀렉/01. 깔끔한색감';
 const pro = '벨루어/02. 작가셀렉/01. 깔끔한색감';
@@ -14,7 +16,8 @@ const studio = '모스앤코튼/인화용';
 const photos = [
   ['cover', `${sky}/DSC02646 0.jpg`, { large: true }],
   ['closing', `${pro}/DSC02636 0.jpg`, { large: true }],
-  ['intro', `${studio}/MOS_6705.jpg`, { crop: [0, 0.41, 1, 0.505] }],
+  ['portrait-bride', `${studio}/MOS_6705.jpg`, { crop: [0.115, 0.445, 0.38, 0.3404] }],
+  ['portrait-groom', `${studio}/MOS_6705.jpg`, { crop: [0.5, 0.445, 0.38, 0.3404] }],
   ['studio-glance', `${studio}/MOS_6397.jpg`],
   ['studio-ribbon', `${studio}/MOS_6653.jpg`],
   ['studio-wink', `${studio}/COT_9078.jpg`],
@@ -53,6 +56,7 @@ const photos = [
 
 await mkdir(output, { recursive: true });
 for (const [id, file, { crop, large } = {}] of photos) {
+  if (only.length && !only.includes(id)) continue;
   const input = path.join(source, file);
   const { width, height } = await sharp(input).metadata();
   const region = crop && {
@@ -68,6 +72,7 @@ for (const [id, file, { crop, large } = {}] of photos) {
 }
 
 // 메신저 공유 미리보기(1200×630)용 사진: 인사하는 두 사람과 하늘.
+if (only.length && !only.includes('og')) process.exit(0);
 const cover = path.join(source, photos[0][1]);
 const meta = await sharp(cover).metadata();
 const ogHeight = Math.round(meta.width * 630 / 1200);

@@ -51,13 +51,15 @@ export function playWelcomeConfetti() {
 
   let frame;
   let startedAt;
+  // Phone toolbars sliding in and out change only the height; that should not cut the burst short.
+  const onResize = () => { if (window.innerWidth !== width) stop(); };
   function stop() {
     cancelAnimationFrame(frame);
     canvas.remove();
     reducedMotion.removeEventListener('change', stop);
     document.removeEventListener('visibilitychange', stop);
     window.removeEventListener('pagehide', stop);
-    window.removeEventListener('resize', stop);
+    window.removeEventListener('resize', onResize);
   }
 
   function draw(timestamp) {
@@ -103,6 +105,6 @@ export function playWelcomeConfetti() {
   reducedMotion.addEventListener('change', stop);
   document.addEventListener('visibilitychange', stop);
   window.addEventListener('pagehide', stop);
-  window.addEventListener('resize', stop);
+  window.addEventListener('resize', onResize);
   frame = requestAnimationFrame(draw);
 }

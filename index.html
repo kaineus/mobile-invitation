@@ -19,87 +19,92 @@
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@300..800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@300..800&family=Nanum+Brush+Script&display=swap">
   <link rel="stylesheet" href="./styles.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#letter">인사말로 건너뛰기</a>
   <main class="paper">
-    <header class="cover">
-      <img class="cover-photo" id="cover-photo" fetchpriority="high" decoding="async"
-        src="./assets/photos/cover-1280.webp"
-        srcset="./assets/photos/cover-640.webp 640w, ./assets/photos/cover-1280.webp 1280w, ./assets/photos/cover-1920.webp 1920w"
-        sizes="(min-aspect-ratio: 2/3) 100vw, 67vh"
-        alt="파란 하늘 아래 잔디 언덕에서 나란히 허리 숙여 인사하는 두 사람">
-      <div class="cover-copy">
-        <h1 id="headline">인사드립니다</h1>
-        <p class="cover-line" id="subline">나동규와 이엄지, 부부가 됩니다.</p>
-        <p class="cover-date" data-date>2027년 2월 14일 일요일</p>
-      </div>
-      <a class="cover-next" href="#letter" aria-label="인사말 읽기">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
-      </a>
-    </header>
+    <div class="opening">
+      <header class="cover">
+        <img class="cover-photo" id="cover-photo" fetchpriority="high" decoding="async"
+          src="./assets/photos/cover-1280.webp"
+          srcset="./assets/photos/cover-640.webp 640w, ./assets/photos/cover-1280.webp 1280w, ./assets/photos/cover-1920.webp 1920w"
+          sizes="(min-aspect-ratio: 2/3) 100vw, 67vh"
+          alt="파란 하늘 아래 잔디 언덕에서 나란히 허리 숙여 인사하는 두 사람">
+        <div class="cover-copy">
+          <p class="cover-names"><span data-groom>나동규</span><span data-bride>이엄지</span></p>
+          <h1 id="headline"><span>저희,</span> <span>부부가 됩니다</span></h1>
+          <p class="cover-date" data-date>2027년 2월 14일 일요일</p>
+        </div>
+      </header>
 
-    <section class="letter" id="letter" aria-labelledby="letter-title">
-      <h2 id="letter-title">소중한 분들께</h2>
-      <p class="letter-message" id="letter-message">저희 두 사람, 부부가 됩니다.
+      <section class="letter reveal" id="letter" aria-labelledby="letter-title">
+        <h2 class="rise" id="letter-title">소중한 분들께</h2>
+        <p class="letter-message" id="letter-message">저희 두 사람, 부부가 됩니다.
 
 별도의 결혼식은 올리지 않고
 소중한 분들께 이 글로 소식을 전합니다.</p>
-      <p class="letter-sign" data-signature>나동규 · 이엄지 드림</p>
-    </section>
+        <p class="letter-sign rise" style="--i:12" data-signature>나동규 · 이엄지 드림</p>
+      </section>
+    </div>
 
-    <section class="date" aria-labelledby="date-title">
-      <h2 id="date-title" data-date>2027년 2월 14일 일요일</h2>
-      <p class="date-line">둘이 함께 써 내려갈 이야기의 첫날</p>
-      <table class="calendar" aria-label="두 사람이 부부가 되는 날이 있는 달력">
+    <section class="date reveal" aria-labelledby="date-title">
+      <h2 class="rise" id="date-title" data-date>2027년 2월 14일 일요일</h2>
+      <p class="date-line rise" style="--i:1">둘이 함께 써 내려갈 이야기의 첫날</p>
+      <table class="calendar rise" style="--i:2" aria-label="두 사람이 부부가 되는 날이 있는 달력">
         <thead><tr><th scope="col">일</th><th scope="col">월</th><th scope="col">화</th><th scope="col">수</th><th scope="col">목</th><th scope="col">금</th><th scope="col">토</th></tr></thead>
         <tbody id="calendar-days"></tbody>
       </table>
-      <p class="countdown" id="countdown"></p>
-      <button class="button button-light" id="save-calendar" type="button">캘린더에 기념일 저장</button>
-      <p class="date-note">별도의 결혼식은 진행하지 않습니다.</p>
+      <p class="countdown rise" style="--i:3" id="countdown"></p>
+      <div class="ticker rise" style="--i:4" id="ticker" aria-hidden="true">
+        <span><b data-unit="days">0</b>일</span>
+        <span><b data-unit="hours">00</b>시간</span>
+        <span><b data-unit="minutes">00</b>분</span>
+        <span><b data-unit="seconds">00</b>초</span>
+      </div>
+      <button class="button button-light rise" style="--i:5" id="save-calendar" type="button">캘린더에 기념일 저장</button>
+      <p class="date-note rise" style="--i:5">별도의 결혼식은 진행하지 않습니다.</p>
     </section>
 
-    <section class="intro" aria-labelledby="intro-title">
-      <h2 id="intro-title">저희를 소개합니다</h2>
-      <figure class="intro-figure">
-        <div id="intro-photo"></div>
-        <figcaption class="intro-names">
-          <p><span>신부</span><strong data-bride>이엄지</strong><em data-bride-english lang="en">Thumb</em><small data-bride-family hidden></small></p>
-          <p><span>신랑</span><strong data-groom>나동규</strong><em data-groom-english lang="en">Wayne</em><small data-groom-family hidden></small></p>
-        </figcaption>
-      </figure>
+    <section class="intro reveal" aria-labelledby="intro-title">
+      <h2 class="rise" id="intro-title">저희를 소개합니다</h2>
+      <div class="portraits">
+        <figure class="portrait rise" style="--i:1">
+          <div id="portrait-bride"></div>
+          <figcaption><span>신부</span><strong data-bride>이엄지</strong><em data-bride-english lang="en">Thumb</em><small data-bride-family hidden></small></figcaption>
+        </figure>
+        <figure class="portrait rise" style="--i:3">
+          <div id="portrait-groom"></div>
+          <figcaption><span>신랑</span><strong data-groom>나동규</strong><em data-groom-english lang="en">Wayne</em><small data-groom-family hidden></small></figcaption>
+        </figure>
+      </div>
       <div class="strip" id="intro-strip" role="group" aria-label="사진관에서 찍은 사진"></div>
     </section>
 
-    <section class="day" aria-labelledby="day-title">
-      <header class="day-head">
-        <h2 id="day-title">둘이 보낸 하루</h2>
-        <p>사진을 누르면 크게 볼 수 있어요.</p>
-      </header>
-      <div id="chapters"></div>
-      <p class="dawn" id="dawn">그리고 내일도,
-같은 아침을 함께 맞겠습니다.</p>
+    <section class="gallery" aria-labelledby="gallery-title">
+      <h2 class="reveal" id="gallery-title"><span class="rise">함께 쌓아 온 순간들</span></h2>
+      <div id="gallery"></div>
     </section>
 
-    <section class="closing" aria-labelledby="closing-title">
+    <section class="gift reveal" id="gift" aria-labelledby="gift-title" hidden>
+      <h2 class="rise" id="gift-title">마음 전하실 곳</h2>
+      <p class="gift-note rise" style="--i:1" id="gift-note"></p>
+      <ul class="rise" style="--i:2" id="account-list"></ul>
+    </section>
+
+    <section class="closing reveal" aria-labelledby="closing-title">
       <div id="closing-photo"></div>
       <div class="closing-copy">
-        <h2 id="closing-title">고맙습니다</h2>
-        <p id="closing-line">서로의 가장 가까운 편이 되어
+        <h2 class="rise" id="closing-title">고맙습니다</h2>
+        <p class="rise" style="--i:2" id="closing-line">서로의 가장 가까운 편이 되어
 다정하게 잘 살겠습니다.</p>
       </div>
     </section>
 
     <footer class="ground">
       <p class="ground-sign" data-signature>나동규 · 이엄지 드림</p>
-      <section class="accounts" id="accounts" aria-labelledby="accounts-title" hidden>
-        <h2 id="accounts-title">마음 전하실 곳</h2>
-        <ul id="account-list"></ul>
-      </section>
       <div class="ground-actions">
         <button class="button button-white" id="share" type="button">이 소식 공유하기</button>
         <button class="button button-light" id="copy-link" type="button">링크 복사</button>

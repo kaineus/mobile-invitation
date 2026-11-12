@@ -7,12 +7,18 @@ export const announcement = {
   // 첫 화면에서 한 번 터지는 꽃가루. false 로 끌 수 있습니다.
   welcomeConfetti: true,
   // family 는 선택 사항입니다. 예: '나○○ · 김○○의 아들'
-  groom: { name: '나동규', english: 'Wayne', family: '' },
-  bride: { name: '이엄지', english: 'Thumb', family: '' },
+  groom: {
+    name: '나동규', english: 'Wayne', family: '',
+    portrait: { id: 'portrait-groom', alt: '짙은 정장에 꽃을 달고 웃는 신랑 나동규' }
+  },
+  bride: {
+    name: '이엄지', english: 'Thumb', family: '',
+    portrait: { id: 'portrait-bride', alt: '하얀 드레스를 입고 환하게 웃는 신부 이엄지' }
+  },
   // 결혼식을 진행하지 않으므로 시간 없는 날짜를 사용합니다.
   date: '2027-02-14',
-  headline: '인사드립니다',
-  subline: '나동규와 이엄지, 부부가 됩니다.',
+  // 첫 화면 하늘에 붓글씨로 한 줄씩 써지는 글입니다.
+  headline: ['저희,', '부부가 됩니다'],
   message: [
     '저희 두 사람, 부부가 됩니다.',
     '',
@@ -27,7 +33,6 @@ export const announcement = {
   ],
   cover: { id: 'cover', alt: '파란 하늘 아래 잔디 언덕에서 나란히 허리 숙여 인사하는 두 사람' },
   intro: {
-    photo: { id: 'intro', alt: '하얀 탁자에 나란히 앉아 웃고 있는 신부 이엄지와 신랑 나동규' },
     photos: [
       { id: 'studio-glance', alt: '손을 잡고 서로를 바라보며 웃는 두 사람' },
       { id: 'studio-ribbon', alt: '하늘색 리본을 두르고 턱을 괸 채 웃는 두 사람' },
@@ -37,11 +42,13 @@ export const announcement = {
       { id: 'studio-veil', alt: '면사포 아래에서 마주 보며 웃는 두 사람' }
     ]
   },
-  // 네 장면의 문장은 이어 읽으면 한 문장이 됩니다.
-  chapters: [
+  // 사진 묶음마다 큰 사진 한 장(lead)이 있고, photos 의 처음 두 장은 비스듬히 놓인 인화 사진으로,
+  // 나머지는 옆으로 흘러가는 줄로 보입니다.
+  // lead.effect 는 그 사진 위에서 움직이는 작은 효과입니다: 'balloons'(하트 풍선), 'bubbles'(비눗방울),
+  // 'leaves'(은행잎), 'sparks'(불꽃, at 은 사진 안에서 불꽃이 있는 위치 [가로, 세로] 0~1). 빼면 효과가 없습니다.
+  gallery: [
     {
-      tone: 'noon', time: '낮', line: '하늘이 유난히 파랗던 날,',
-      lead: { id: 'noon-jump', alt: '하트 풍선을 들고 뛰어오른 신랑과 그 손을 잡은 신부' },
+      lead: { id: 'noon-jump', alt: '하트 풍선을 들고 뛰어오른 신랑과 그 손을 잡은 신부', effect: 'balloons' },
       photos: [
         { id: 'noon-lift', alt: '면사포를 쓴 신부를 번쩍 안아 올린 신랑' },
         { id: 'noon-hearts', alt: '빨간 하트 풍선을 하나씩 들고 마주 보는 두 사람' },
@@ -52,8 +59,7 @@ export const announcement = {
       ]
     },
     {
-      tone: 'afternoon', time: '오후', line: '풀밭에서 비눗방울을 불고,',
-      lead: { id: 'field-bubbles-wide', alt: '비눗방울을 불다 마주 보고 웃는 두 사람', wide: true },
+      lead: { id: 'field-bubbles-wide', alt: '비눗방울을 불다 마주 보고 웃는 두 사람', wide: true, effect: 'bubbles' },
       photos: [
         { id: 'field-kiss', alt: '웃는 신부의 머리에 입 맞추는 신랑' },
         { id: 'field-flowers', alt: '작은 꽃다발을 들고 볼을 맞댄 두 사람' },
@@ -64,8 +70,7 @@ export const announcement = {
       ]
     },
     {
-      tone: 'sunset', time: '해 질 녘', line: '볕이 길어진 골목을 걷다가,',
-      lead: { id: 'alley-ginkgo', alt: '은행나무 길 횡단보도를 손잡고 건너는 두 사람' },
+      lead: { id: 'alley-ginkgo', alt: '은행나무 길 횡단보도를 손잡고 건너는 두 사람', effect: 'leaves' },
       photos: [
         { id: 'alley-brick', alt: '붉은 벽돌 건물에 나란히 기대선 두 사람' },
         { id: 'alley-gaze', alt: '저녁 볕 속에서 손을 잡고 마주 보는 두 사람' },
@@ -76,8 +81,7 @@ export const announcement = {
       ]
     },
     {
-      tone: 'night', time: '밤', line: '다리 위에서 작은 불꽃을 켰습니다.',
-      lead: { id: 'night-sparkler', alt: '밤의 다리 위에서 불꽃을 함께 들고 있는 두 사람' },
+      lead: { id: 'night-sparkler', alt: '밤의 다리 위에서 불꽃을 함께 들고 있는 두 사람', effect: 'sparks', at: [0.33, 0.67] },
       photos: [
         { id: 'night-dusk', alt: '분홍빛 노을과 강 건너 빌딩을 뒤로하고 마주 선 두 사람' },
         { id: 'night-sparklers', alt: '양손에 불꽃을 들고 웃는 두 사람' },
@@ -88,13 +92,24 @@ export const announcement = {
       ]
     }
   ],
-  dawn: '그리고 내일도,\n같은 아침을 함께 맞겠습니다.',
   closing: {
     id: 'closing', alt: '파란 하늘 아래 두 팔을 벌리고 깊이 허리 숙여 인사하는 두 사람',
     title: '고맙습니다',
     line: '서로의 가장 가까운 편이 되어\n다정하게 잘 살겠습니다.'
   },
-  // 선택 사항: 마음 전하실 곳. 비워 두면 표시하지 않습니다.
-  // 예: { label: '신랑 나동규', bank: '○○은행', number: '000-0000-0000' }
-  accounts: []
+  // 마음 전하실 곳(계좌번호). 평소 주소에서는 보이지 않고,
+  // 주소 끝에 ?mode=heart 를 붙인 링크로 열었을 때만 보입니다.
+  //   소식만 전하는 링크: https://kaineus.github.io/mobile-invitation/
+  //   계좌가 보이는 링크: https://kaineus.github.io/mobile-invitation/?mode=heart
+  // 주의: 이 저장소는 공개이므로 여기에 적은 계좌번호는 누구나 볼 수 있습니다.
+  gift: {
+    mode: 'heart',
+    title: '마음 전하실 곳',
+    note: '멀리서 마음을 전하고 싶으신 분들을 위해\n조심스럽게 적어 둡니다.',
+    // 아래는 자리만 잡아 둔 값입니다. 실제 은행과 계좌번호로 바꿔 주세요.
+    accounts: [
+      { label: '신랑 나동규', bank: '○○은행', number: '000-00-0000000', holder: '나동규' },
+      { label: '신부 이엄지', bank: '○○은행', number: '000-00-0000000', holder: '이엄지' }
+    ]
+  }
 };

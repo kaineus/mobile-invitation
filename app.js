@@ -1,5 +1,6 @@
 import { announcement as data } from './invitation.js';
 import { playWelcomeConfetti } from './confetti.js';
+import { motion, onEnter, releaseBalloons, addEffect, drift } from './motion.js';
 
 const $ = (selector) => document.querySelector(selector);
 const text = (selector, value) => document.querySelectorAll(selector).forEach((node) => { node.textContent = value; });
@@ -17,23 +18,22 @@ const dateLabel = new Intl.DateTimeFormat('ko-KR', {
 const couple = `${data.groom.name} · ${data.bride.name}`;
 
 document.title = `${couple}, 부부가 됩니다`;
-text('#headline', data.headline);
-text('#subline', data.subline);
 text('[data-date]', dateLabel);
-text('#letter-message', data.message.join('\n'));
 text('[data-signature]', `${couple} 드림`);
 text('#english-names', `${data.groom.english} & ${data.bride.english}`);
-text('#dawn', data.dawn);
 text('#closing-title', data.closing.title);
 text('#closing-line', data.closing.line);
-for (const role of ['groom', 'bride']) {
-  text(`[data-${role}]`, data[role].name);
-  text(`[data-${role}-english]`, data[role].english);
-  if (data[role].family) {
-    text(`[data-${role}-family]`, data[role].family);
-    $(`[data-${role}-family]`).hidden = false;
-  }
-}
+// Each line of the headline and the letter is its own piece so it can arrive on its own beat.
+$('#headline').replaceChildren(...data.headline.flatMap((line, index) => {
+  const span = make('span', '', line);
+  span.style.setProperty('--i', index);
+  return index ? [document.createTextNode(' '), span] : [span];
+}));
+$('#letter-message').replaceChildren(...data.message.map((line, index) => {
+  const span = make('span', 'rise', line || '\u00a0');
+  span.style.setProperty('--i', index + 1);
+  return span;
+}));
 
 // Photos: every id has a 640px and a 1280px WebP (see scripts/photos.mjs).
 const photoUrl = (id, width) => `./assets/photos/${id}-${width}.webp`;
@@ -63,25 +63,40 @@ function photoButton(photo, className, sizes) {
   return button;
 }
 const fullWidth = '(min-width: 480px) 480px, 100vw';
+const halfWidth = '(min-width: 480px) 240px, 50vw';
 const stripWidth = '(min-width: 480px) 260px, 54vw';
-const fillStrip = (strip, photos) => strip.append(...photos.map((photo) => photoButton(photo, 'strip-photo', stripWidth)));
-
-$('#intro-photo').replaceWith(photoButton(data.intro.photo, 'lead lead-intro', fullWidth));
-fillStrip($('#intro-strip'), data.intro.photos);
-for (const chapter of data.chapters) {
-  const article = make('article', `chapter chapter-${chapter.tone}`);
+function makeStrip(photos, label, speed) {
   const strip = make('div', 'strip');
   strip.setAttribute('role', 'group');
-  strip.setAttribute('aria-label', `${chapter.time}의 사진`);
-  article.append(
-    make('h3', 'chapter-time', chapter.time),
-    make('p', 'chapter-line', chapter.line),
-    photoButton(chapter.lead, chapter.lead.wide ? 'lead lead-wide' : 'lead', fullWidth),
-    strip
-  );
-  fillStrip(strip, chapter.photos);
-  $('#chapters').append(article);
+  strip.setAttribute('aria-label', label);
+  strip.append(...photos.map((photo) => photoButton(photo, 'strip-photo', stripWidth)));
+  drift(strip, speed);
+  return strip;
 }
+
+for (const role of ['bride', 'groom']) {
+  text(`[data-${role}]`, data[role].name);
+  text(`[data-${role}-english]`, data[role].english);
+  if (data[role].family) {
+    text(`[data-${role}-family]`, data[role].family);
+    $(`[data-${role}-family]`).hidden = false;
+  }
+  $(`#portrait-${role}`).replaceWith(photoButton(data[role].portrait, 'portrait-photo', halfWidth));
+}
+$('#intro-strip').replaceWith(makeStrip(data.intro.photos, '사진관에서 찍은 사진', 20));
+
+// Each group: one large photo with its own small effect, two prints tossed below it, then a drifting row.
+data.gallery.forEach((group, index) => {
+  const block = make('div', 'gallery-group');
+  const lead = photoButton(group.lead, group.lead.wide ? 'lead lead-wide' : 'lead', fullWidth);
+  addEffect(lead, group.lead.effect, group.lead.at);
+  onEnter(lead, 0.9);
+  const prints = make('div', 'prints');
+  prints.append(...group.photos.slice(0, 2).map((photo) => photoButton(photo, 'print', halfWidth)));
+  onEnter(prints, 0.82);
+  block.append(lead, prints, makeStrip(group.photos.slice(2), `사진 묶음 ${index + 1}`, index % 2 ? 24 : -24));
+  $('#gallery').append(block);
+});
 $('#closing-photo').replaceWith(photoImage(data.closing, fullWidth));
 
 // Full-screen viewer: arrows, swipe, and keyboard move through every photo in page order.
@@ -121,7 +136,7 @@ viewer.addEventListener('touchend', (event) => {
   if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) showPhoto(current + (dx < 0 ? 1 : -1));
 }, { passive: true });
 
-// Calendar of the month, with the day itself marked by a heart balloon.
+// Calendar of the month. The day itself is a heart balloon; tapping it lets more balloons go.
 const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
 const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 let row;
@@ -129,29 +144,46 @@ for (let cell = 0; cell < Math.ceil((firstWeekday + daysInMonth) / 7) * 7; cell+
   if (cell % 7 === 0) { row = make('tr'); $('#calendar-days').append(row); }
   const td = make('td');
   const value = cell - firstWeekday + 1;
-  if (value > 0 && value <= daysInMonth) {
-    const span = make('span', value === day ? 'wedding-day' : '', value);
-    if (value === day) span.setAttribute('aria-label', `${month}월 ${day}일, 부부가 되는 날`);
-    td.append(span);
+  if (value === day) {
+    const heart = make(motion ? 'button' : 'span', 'wedding-day', value);
+    heart.setAttribute('aria-label', `${month}월 ${day}일, 부부가 되는 날`);
+    if (motion) {
+      heart.type = 'button';
+      heart.addEventListener('click', () => releaseBalloons(7));
+    }
+    td.append(heart);
+  } else if (value > 0 && value <= daysInMonth) {
+    td.append(make('span', '', value));
   }
   row.append(td);
 }
+
+// Counts down to midnight in Korea, wherever the visitor is, then counts the days since.
+const units = Object.fromEntries([...document.querySelectorAll('#ticker [data-unit]')].map((node) => [node.dataset.unit, node]));
+const pad = (value) => String(value).padStart(2, '0');
 function updateCountdown() {
-  const todayParts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Seoul', year: 'numeric', month: 'numeric', day: 'numeric'
-  }).formatToParts(new Date()).map(({ type, value }) => [type, value]));
-  const difference = Math.round((Date.UTC(year, month - 1, day) - Date.UTC(+todayParts.year, +todayParts.month - 1, +todayParts.day)) / 86400000);
-  const node = $('#countdown');
-  if (difference > 0) {
-    node.replaceChildren(document.createTextNode('부부로 함께할 날까지 '), make('strong', '', difference), document.createTextNode('일'));
-  } else if (difference === 0) {
-    node.textContent = '오늘, 저희 부부가 되었습니다.';
-  } else {
-    node.replaceChildren(document.createTextNode('부부로 함께한 지 '), make('strong', '', -difference + 1), document.createTextNode('일째'));
+  const remaining = date.getTime() - Date.now();
+  const label = $('#countdown');
+  if (remaining > 0) {
+    const seconds = Math.floor(remaining / 1000);
+    const days = Math.floor(seconds / 86400);
+    units.days.textContent = days;
+    units.hours.textContent = pad(Math.floor(seconds / 3600) % 24);
+    units.minutes.textContent = pad(Math.floor(seconds / 60) % 60);
+    units.seconds.textContent = pad(seconds % 60);
+    const spoken = `부부가 되는 날까지 ${days + 1}일`;
+    if (label.dataset.spoken !== spoken) {
+      label.dataset.spoken = spoken;
+      label.replaceChildren(document.createTextNode('부부가 되는 날까지'), make('span', 'sr-only', ` ${days + 1}일`));
+    }
+    return;
   }
+  $('#ticker').hidden = true;
+  const since = Math.floor(-remaining / 86400000);
+  label.textContent = since === 0 ? '오늘, 저희 부부가 되었습니다.' : `부부로 함께한 지 ${since + 1}일째`;
 }
 updateCountdown();
-setInterval(updateCountdown, 60000);
+setInterval(updateCountdown, 1000);
 
 // RFC 5545: all-day event, exclusive end date, UTF-8 lines folded at 75 octets.
 const icsEscape = (value) => value.replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
@@ -225,25 +257,46 @@ $('#share').addEventListener('click', async () => {
   await copy(pageUrl(), '링크를 복사했습니다.');
 });
 
-// Optional: accounts appear only when invitation.js lists them.
-for (const account of data.accounts ?? []) {
-  const item = make('li');
-  const copyButton = make('button', 'account-copy', '계좌번호 복사');
-  copyButton.type = 'button';
-  copyButton.addEventListener('click', () => copy(`${account.bank} ${account.number}`, '계좌번호를 복사했습니다.'));
-  item.append(make('span', 'account-label', account.label), make('span', 'account-number', `${account.bank} ${account.number}`), copyButton);
-  $('#account-list').append(item);
-  $('#accounts').hidden = false;
+// Two links, one page: the accounts appear only when the address carries ?mode=<gift.mode>.
+const gift = data.gift ?? {};
+if (gift.accounts?.length && new URLSearchParams(window.location.search).get('mode') === gift.mode) {
+  text('#gift-title', gift.title);
+  text('#gift-note', gift.note);
+  for (const account of gift.accounts) {
+    const item = make('li');
+    const copyButton = make('button', 'account-copy', '복사');
+    copyButton.type = 'button';
+    copyButton.setAttribute('aria-label', `${account.label} 계좌번호 복사`);
+    copyButton.addEventListener('click', () => copy(`${account.bank} ${account.number}`, '계좌번호를 복사했습니다.'));
+    item.append(
+      make('span', 'account-label', account.label),
+      make('span', 'account-number', `${account.bank} ${account.number}`),
+      copyButton
+    );
+    if (account.holder) item.append(make('span', 'account-holder', `예금주 ${account.holder}`));
+    $('#account-list').append(item);
+  }
+  $('#gift').hidden = false;
 }
 
-// Greet with confetti once the bowing photo is on screen, not over an empty sky.
-if (data.welcomeConfetti !== false) {
-  const cover = $('#cover-photo');
-  const loaded = cover.complete ? Promise.resolve() : new Promise((resolve) => {
-    cover.addEventListener('load', resolve, { once: true });
-    cover.addEventListener('error', resolve, { once: true });
-  });
-  Promise.race([loaded, new Promise((resolve) => setTimeout(resolve, 2500))]).then(() => {
-    if (window.scrollY < window.innerHeight / 2) playWelcomeConfetti();
-  });
+// Sections arrive as they are scrolled to. The day sends up balloons; the last bow gets its own confetti.
+const confetti = data.welcomeConfetti !== false;
+for (const node of document.querySelectorAll('.reveal')) {
+  if (node.matches('.date')) onEnter(node, 0.7, () => setTimeout(() => releaseBalloons(6), 900));
+  else if (node.matches('.closing')) onEnter(node, 0.5, () => { if (confetti && !$('.welcome-confetti')) playWelcomeConfetti(); });
+  else onEnter(node, node.matches('.letter') ? 0.72 : 0.86);
 }
+
+// Opening: once the photo and the brush lettering are ready, the greeting is written across the sky
+// and the confetti goes off as the last stroke lands.
+const cover = $('#cover-photo');
+const photoReady = cover.complete ? Promise.resolve() : new Promise((resolve) => {
+  cover.addEventListener('load', resolve, { once: true });
+  cover.addEventListener('error', resolve, { once: true });
+});
+const letteringReady = document.fonts?.load ? document.fonts.load('1em "Nanum Brush Script"', data.headline.join('')).catch(() => {}) : Promise.resolve();
+Promise.race([Promise.all([photoReady, letteringReady]), new Promise((resolve) => setTimeout(resolve, 2500))]).then(() => {
+  $('.cover').classList.add('ready');
+  if (!confetti) return;
+  setTimeout(() => { if (window.scrollY < window.innerHeight / 2) playWelcomeConfetti(); }, motion ? 1500 : 0);
+});

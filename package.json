@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve.mjs",
-    "lint": "node --check app.js && node --check confetti.js && node --check invitation.js && node --check scripts/build.mjs && node --check scripts/serve.mjs && node --check scripts/photos.mjs",
+    "lint": "node --check app.js && node --check confetti.js && node --check motion.js && node --check invitation.js && node --check scripts/build.mjs && node --check scripts/serve.mjs && node --check scripts/photos.mjs",
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs dist",
     "photos": "node scripts/photos.mjs"
