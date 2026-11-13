@@ -851,6 +851,16 @@ dialog {
   animation:heart-pop .7s cubic-bezier(.3,1.6,.5,1) .7s both,heart-bob 2.6s ease-in-out 1.5s infinite;
 }
 
+/* Entrances play only on the way down. Anything first reached while scrolling back up is .settled:
+   already in place, with nothing to watch arrive. */
+.motion .settled .rise,.motion .lead.settled img,.motion .prints.settled .print {
+  transition:none;
+}
+
+.motion .date.settled .wedding-day {
+  animation:heart-bob 2.6s ease-in-out infinite;
+}
+
 @keyframes heart-pop {
   from {
     transform:scale(0);

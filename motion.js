@@ -13,23 +13,30 @@ const random = (min, max) => min + Math.random() * (max - min);
 
 // Adds .in the first time the node's top edge rises past `line`
 // (a fraction of the viewport height, measured from the top).
+// Entrances play only on the way down. A node first met while scrolling back up is marked .settled,
+// so it is simply in place, and its callback is skipped.
 const waiting = new Map();
+let scrolledTo = window.scrollY;
+let goingDown = true;
 export function onEnter(node, line = 0.86, callback) {
   if (!motion) return;
-  const enter = () => {
+  const enter = (animated = true) => {
     observer.disconnect();
     waiting.delete(node);
+    if (!animated) node.classList.add('settled');
     node.classList.add('in');
-    callback?.();
+    if (animated) callback?.();
   };
-  const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) enter(); },
+  const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) enter(goingDown); },
     { rootMargin: `0px 0px -${Math.round((1 - line) * 100)}% 0px` });
   observer.observe(node);
   waiting.set(node, enter);
 }
-// On a very tall screen the last parts can never climb past their line,
-// so reaching the end of the page brings in whatever is on screen.
 window.addEventListener('scroll', () => {
+  if (window.scrollY !== scrolledTo) goingDown = window.scrollY > scrolledTo;
+  scrolledTo = window.scrollY;
+  // On a very tall screen the last parts can never climb past their line,
+  // so reaching the end of the page brings in whatever is on screen.
   if (!waiting.size || window.innerHeight + window.scrollY < document.documentElement.scrollHeight - 4) return;
   for (const [node, enter] of [...waiting]) {
     const { top, bottom } = node.getBoundingClientRect();

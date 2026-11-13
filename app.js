@@ -2,6 +2,15 @@ import { announcement as data } from './invitation.js';
 import { playWelcomeConfetti, studioConfetti, skyConfetti } from './confetti.js';
 import { motion, onEnter, releaseBalloons, addEffect, drift } from './motion.js';
 
+// Always open at the top, where the greeting is, even on a reload or when coming back to the tab's
+// history. (index.html also turns off the browser's own scroll restoration as early as it can.)
+function toTop() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+}
+if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search);
+toTop();
+window.addEventListener('pageshow', (event) => { if (event.persisted) toTop(); });
+
 const $ = (selector) => document.querySelector(selector);
 const text = (selector, value) => document.querySelectorAll(selector).forEach((node) => { node.textContent = value; });
 const make = (tag, className, value) => {
