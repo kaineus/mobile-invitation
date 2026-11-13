@@ -1,8 +1,9 @@
 // Scroll reveals and the small effects that make the photographs feel alive.
 // Everything here is decoration: none of it runs when the visitor asks for reduced motion,
 // and the page reads the same without it.
-export const motion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window;
-if (motion) document.documentElement.classList.add('motion');
+// index.html makes the decision (the .motion class on <html>) before the first paint, so that
+// what is about to be animated in is never seen sitting there first.
+export const motion = document.documentElement.classList.contains('motion');
 
 const element = (tag, className) => {
   const node = document.createElement(tag);

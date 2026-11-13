@@ -21,7 +21,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@300..800&family=Nanum+Brush+Script&display=swap">
   <link rel="stylesheet" href="./styles.css">
-  <script>history.scrollRestoration = 'manual';</script>
+  <script>
+    history.scrollRestoration = 'manual';
+    // Decide about motion before anything is painted. Otherwise the greeting shows as plain text,
+    // vanishes when the page script arrives, and then comes back animated.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+      document.documentElement.classList.add('motion');
+      // If the page script never finishes, show everything still rather than leave it hidden.
+      setTimeout(function () {
+        if (!document.documentElement.classList.contains('started')) document.documentElement.classList.remove('motion');
+      }, 7000);
+    }
+  </script>
   <script type="module" src="./app.js"></script>
 </head>
 <body>

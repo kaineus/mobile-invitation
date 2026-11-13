@@ -800,8 +800,8 @@ dialog {
 }
 
 /* ───── Motion ─────
-   motion.js adds .motion to <html> unless the visitor prefers reduced motion,
-   so without it (or without JavaScript) everything simply sits in place. */
+   A small script in index.html adds .motion to <html> before the first paint, unless the visitor
+   prefers reduced motion, so without it (or without JavaScript) everything simply sits in place. */
 
 /* The greeting is written across the sky, one line after the other. */
 .motion .cover h1 span {
@@ -809,7 +809,7 @@ dialog {
 }
 
 .motion .cover.ready h1 span {
-  animation:write 1s cubic-bezier(.55,.1,.35,1) calc(var(--i) * .65s + .15s) forwards;
+  animation:write 1s cubic-bezier(.55,.1,.35,1) calc(var(--i,0) * .65s + .15s) forwards;
 }
 
 @keyframes write {

@@ -359,3 +359,6 @@ if (confetti) {
   });
 }
 Promise.race([Promise.all([photoReady, letteringReady]), pause(2500)]).then(() => $('.cover').classList.add('ready'));
+
+// Everything is set up; index.html's fallback timer can stand down.
+document.documentElement.classList.add('started');
