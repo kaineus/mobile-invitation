@@ -68,13 +68,12 @@ export function playWelcomeConfetti(colors = skyConfetti) {
 
   function draw(timestamp) {
     startedAt ??= timestamp;
-    // Launch every piece together so this reads as one emphatic pop.
-    const elapsed = (timestamp - startedAt - 250) / 1000;
+    // Launch every piece together, at once, so this reads as one emphatic pop.
+    const elapsed = (timestamp - startedAt) / 1000;
     if (elapsed >= 6.5) { stop(); return; }
     context.clearRect(0, 0, width, height);
 
     for (const particle of particles) {
-      if (elapsed < 0) continue;
       // Slow the climb without flattening the launch arc. Resume normal speed
       // smoothly after each piece reaches its own peak.
       const ascentRate = 0.7;

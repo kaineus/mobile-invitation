@@ -339,16 +339,23 @@ for (const node of document.querySelectorAll('.reveal')) {
   else onEnter(node, node.matches('.letter') ? 0.72 : 0.86);
 }
 
-// Opening: once the confetti photo and the brush lettering are ready, the greeting is written above the two
-// and more confetti, round like the pieces in the photo, goes off as the last stroke lands.
+// Opening: confetti, round like the pieces in the photo, goes off the moment the page opens,
+// and the greeting is written above the two as soon as the brush lettering has loaded.
+const pause = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const cover = $('#cover-photo');
 const photoReady = cover.complete ? Promise.resolve() : new Promise((resolve) => {
   cover.addEventListener('load', resolve, { once: true });
   cover.addEventListener('error', resolve, { once: true });
 });
 const letteringReady = document.fonts?.load ? document.fonts.load('1em "Nanum Brush Script"', data.headline.join('')).catch(() => {}) : Promise.resolve();
-Promise.race([Promise.all([photoReady, letteringReady]), new Promise((resolve) => setTimeout(resolve, 2500))]).then(() => {
-  $('.cover').classList.add('ready');
-  if (!confetti) return;
-  setTimeout(() => { if (window.scrollY < window.innerHeight / 2) playWelcomeConfetti(studioConfetti); }, motion ? 1500 : 0);
-});
+if (confetti) {
+  // The burst belongs with the photo, so give the photo a blink to arrive, but no longer than that.
+  // A page opened in a background tab saves it for when the tab is first looked at.
+  const seen = document.hidden
+    ? new Promise((resolve) => document.addEventListener('visibilitychange', resolve, { once: true }))
+    : Promise.resolve();
+  Promise.all([seen, Promise.race([photoReady, pause(350)])]).then(() => {
+    if (window.scrollY < window.innerHeight / 2) playWelcomeConfetti(studioConfetti);
+  });
+}
+Promise.race([Promise.all([photoReady, letteringReady]), pause(2500)]).then(() => $('.cover').classList.add('ready'));
