@@ -1,5 +1,5 @@
 import { announcement as data } from './invitation.js';
-import { playWelcomeConfetti } from './confetti.js';
+import { playWelcomeConfetti, studioConfetti, skyConfetti } from './confetti.js';
 import { motion, onEnter, releaseBalloons, addEffect, drift } from './motion.js';
 
 const $ = (selector) => document.querySelector(selector);
@@ -326,12 +326,12 @@ if (gift.accounts?.length && new URLSearchParams(window.location.search).get('mo
 const confetti = data.welcomeConfetti !== false;
 for (const node of document.querySelectorAll('.reveal')) {
   if (node.matches('.date')) onEnter(node, 0.7, () => setTimeout(() => releaseBalloons(6), 900));
-  else if (node.matches('.closing')) onEnter(node, 0.5, () => { if (confetti && !$('.welcome-confetti')) playWelcomeConfetti(); });
+  else if (node.matches('.closing')) onEnter(node, 0.5, () => { if (confetti && !$('.welcome-confetti')) playWelcomeConfetti(skyConfetti); });
   else onEnter(node, node.matches('.letter') ? 0.72 : 0.86);
 }
 
-// Opening: once the photo and the brush lettering are ready, the greeting is written across the sky
-// and the confetti goes off as the last stroke lands.
+// Opening: once the confetti photo and the brush lettering are ready, the greeting is written above the two
+// and more confetti, round like the pieces in the photo, goes off as the last stroke lands.
 const cover = $('#cover-photo');
 const photoReady = cover.complete ? Promise.resolve() : new Promise((resolve) => {
   cover.addEventListener('load', resolve, { once: true });
@@ -341,5 +341,5 @@ const letteringReady = document.fonts?.load ? document.fonts.load('1em "Nanum Br
 Promise.race([Promise.all([photoReady, letteringReady]), new Promise((resolve) => setTimeout(resolve, 2500))]).then(() => {
   $('.cover').classList.add('ready');
   if (!confetti) return;
-  setTimeout(() => { if (window.scrollY < window.innerHeight / 2) playWelcomeConfetti(); }, motion ? 1500 : 0);
+  setTimeout(() => { if (window.scrollY < window.innerHeight / 2) playWelcomeConfetti(studioConfetti); }, motion ? 1500 : 0);
 });

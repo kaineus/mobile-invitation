@@ -14,8 +14,8 @@ const studio = '모스앤코튼/인화용';
 
 // [id, 원본 경로, 옵션] — crop 은 원본 대비 비율(left, top, width, height)입니다.
 const photos = [
-  ['cover', `${sky}/DSC02646 0.jpg`, { large: true }],
-  ['closing', `${pro}/DSC02636 0.jpg`, { large: true }],
+  ['cover', `${studio}/COT_9384.jpg`, { large: true }],
+  ['closing', `${sky}/DSC02646 0.jpg`, { large: true }],
   ['portrait-bride', `${studio}/MOS_6705.jpg`, { crop: [0.115, 0.445, 0.38, 0.3404] }],
   ['portrait-groom', `${studio}/MOS_6705.jpg`, { crop: [0.5, 0.445, 0.38, 0.3404] }],
   ['shades-bride', `${studio}/MOS_6983.jpg`, { crop: [0.19, 0.13, 0.32, 0.2844] }],
@@ -76,10 +76,10 @@ for (const [id, file, { crop, large } = {}] of photos) {
 
 // 메신저 공유 미리보기(1200×630)용 사진: 인사하는 두 사람과 하늘.
 if (only.length && !only.includes('og')) process.exit(0);
-const cover = path.join(source, photos[0][1]);
-const meta = await sharp(cover).metadata();
+const bow = path.join(source, photos.find(([id]) => id === 'closing')[1]);
+const meta = await sharp(bow).metadata();
 const ogHeight = Math.round(meta.width * 630 / 1200);
-await sharp(cover)
+await sharp(bow)
   .extract({ left: 0, top: Math.round(meta.height * 0.872) - ogHeight, width: meta.width, height: ogHeight })
   .resize(1200, 630).jpeg({ quality: 84, mozjpeg: true }).toFile(path.resolve('assets/og.jpg'));
 console.log('og.jpg');

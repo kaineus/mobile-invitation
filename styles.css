@@ -125,29 +125,39 @@ h2 {
   text-align:center;
 }
 
-/* Opening: the bow stays pinned while the letter slides up over it like a sheet of paper. */
+/* Opening: the confetti photo stays pinned while the letter slides up over it like a sheet of paper.
+   The studio backdrop is one flat colour, so the photo sits at the bottom of a cover of that same colour
+   and its edges melt into it; the greeting takes the open space above the two.
+   The photo is as wide as the page unless that would leave the greeting no room on a short screen. */
 .cover {
+  --cover-height:clamp(540px,100svh,980px);
+  --photo-height:min(min(100vw,480px) * 1.5,var(--cover-height) * .72);
   position:sticky;
   top:0;
-  height:100svh;
-  min-height:540px;
-  max-height:980px;
+  height:var(--cover-height);
   overflow:hidden;
-  color:#fff;
-  background:linear-gradient(var(--sky-top),var(--sky) 55%,var(--sky-low) 83%,var(--grass) 84%);
+  background:#d6d6d4;
 }
 
 .cover-photo {
   position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:30% 100%;
+  left:50%;
+  bottom:0;
+  height:var(--photo-height);
+  aspect-ratio:2/3;
+  transform:translateX(-50%);
+  -webkit-mask-image:linear-gradient(#0000,#000 15%),linear-gradient(90deg,#0000,#000 7%,#000 93%,#0000);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(#0000,#000 15%),linear-gradient(90deg,#0000,#000 7%,#000 93%,#0000);
+  mask-composite:intersect;
 }
 
+/* The two heads begin about a quarter of the way down the photo; the copy gets everything above that. */
 .cover-copy {
   position:relative;
+  display:flex;
+  flex-direction:column;
+  height:calc(var(--cover-height) - var(--photo-height) * .75);
   padding:calc(env(safe-area-inset-top) + 24px) var(--gutter) 0;
 }
 
@@ -159,7 +169,8 @@ h2 {
 }
 
 .cover h1 {
-  margin-top:4.5svh;
+  margin-top:auto;
+  color:var(--sky-top);
   font-family:var(--brush);
   font-size:clamp(3.7rem,19.5vw,5.75rem);
   font-weight:400;
@@ -178,7 +189,7 @@ h2 {
 }
 
 .cover-date {
-  margin-top:20px;
+  margin:14px 0 auto;
   font-size:.8125rem;
   letter-spacing:.22em;
 }
@@ -189,7 +200,7 @@ h2 {
   padding:70px var(--gutter) 92px;
   border-radius:26px 26px 0 0;
   background:var(--paper);
-  box-shadow:0 -14px 44px #03284838;
+  box-shadow:0 -14px 44px #14212e2e;
 }
 
 .letter::before {
@@ -579,7 +590,7 @@ h2 {
   font-weight:600;
 }
 
-/* Closing: the second bow, a thank-you. */
+/* Closing: the bow, a thank-you. */
 .closing {
   position:relative;
   color:#fff;

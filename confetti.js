@@ -1,5 +1,13 @@
+// Round paper confetti, like the pieces in the studio photo. The hues stay the same in both sets;
+// only their depth changes so they read against what is behind them.
+// Over the blue sky: dress white, hydrangea blue, heart-balloon red, tulip yellow, studio pink.
+export const skyConfetti = ['#ffffff', '#bfe0f7', '#e5343b', '#f6c935', '#ffc9d6'];
+// Over the pale studio backdrop, white would vanish, so it gives way to the orange in the photo's
+// own confetti, and the blue and pink are a shade deeper.
+export const studioConfetti = ['#f5843c', '#86c2f0', '#e5343b', '#f6c935', '#ff9dbb'];
+
 // One generous, energetic burst. No external library or persistent animation.
-export function playWelcomeConfetti() {
+export function playWelcomeConfetti(colors = skyConfetti) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (reducedMotion.matches || document.hidden) return;
 
@@ -18,9 +26,6 @@ export function playWelcomeConfetti() {
   document.body.append(canvas);
 
   const paper = document.querySelector('.paper').getBoundingClientRect();
-  // Picked from the photos so the pieces read against the blue sky:
-  // dress white, hydrangea blue, heart-balloon red, tulip yellow, studio pink.
-  const colors = ['#ffffff', '#bfe0f7', '#e5343b', '#f6c935', '#ffc9d6'];
   const count = width < 540 ? 310 : 420;
   const launchHeight = Math.min(height * 0.78, 650);
   const random = (min, max) => min + Math.random() * (max - min);
@@ -40,12 +45,11 @@ export function playWelcomeConfetti() {
       gravity: random(225, 325),
       flutter: random(6, 20),
       frequency: random(2.5, 6),
-      size: random(5, 12),
+      radius: random(3, 6.2),
       rotation: random(0, Math.PI * 2),
       spin: random(-11, 11),
       phase: random(0, Math.PI * 2),
-      color: colors[index % colors.length],
-      round: index % 5 === 0
+      color: colors[index % colors.length]
     };
   });
 
@@ -87,16 +91,13 @@ export function playWelcomeConfetti() {
       context.save();
       context.translate(x, y);
       context.rotate(particle.rotation + age * particle.spin);
+      // Every piece is a disc; squashing it as it tumbles shows it turning edge-on in the air.
       context.scale(1, 0.35 + Math.abs(Math.cos(age * 6 + particle.phase)) * 0.65);
       context.globalAlpha = Math.min(1, age * 30) * Math.max(0, 1 - Math.max(0, age - 3.2) / 1.5);
       context.fillStyle = particle.color;
-      if (particle.round) {
-        context.beginPath();
-        context.ellipse(0, 0, particle.size * 0.45, particle.size * 0.65, 0, 0, Math.PI * 2);
-        context.fill();
-      } else {
-        context.fillRect(-particle.size / 2, -particle.size / 3, particle.size, particle.size * 0.65);
-      }
+      context.beginPath();
+      context.arc(0, 0, particle.radius, 0, Math.PI * 2);
+      context.fill();
       context.restore();
     }
     frame = requestAnimationFrame(draw);

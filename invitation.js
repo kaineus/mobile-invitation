@@ -4,7 +4,7 @@
 export const announcement = {
   // 배포 주소. 메신저 공유 미리보기 사진(og:image)의 절대 경로에 쓰입니다.
   siteUrl: 'https://kaineus.github.io/mobile-invitation/',
-  // 첫 화면에서 한 번 터지는 꽃가루. false 로 끌 수 있습니다.
+  // 첫 화면(색종이 사진)과 마지막 인사 사진에서 터지는 동그란 색종이. false 로 끌 수 있습니다.
   welcomeConfetti: true,
   // family 는 선택 사항입니다. 예: '나○○ · 김○○의 아들'
   // shades 는 소개 사진을 누르면(처음 보일 때는 저절로) 바뀌는 선글라스 사진입니다. 빼면 바뀌지 않습니다.
@@ -34,7 +34,7 @@ export const announcement = {
     '어디에서든 따뜻한 마음으로 축하해 주세요.',
     '보내 주시는 마음, 오래도록 간직하겠습니다.'
   ],
-  cover: { id: 'cover', alt: '파란 하늘 아래 잔디 언덕에서 나란히 허리 숙여 인사하는 두 사람' },
+  cover: { id: 'cover', alt: '색종이가 흩날리는 사진관 바닥에 나란히 앉아 웃고 있는 두 사람' },
   intro: {
     // 소개 사진 아래에 크게 보이는 한 장.
     lead: { id: 'studio-sunglasses', alt: '검은 선글라스를 쓰고 장난스럽게 선 두 사람' },
@@ -98,7 +98,7 @@ export const announcement = {
     }
   ],
   closing: {
-    id: 'closing', alt: '파란 하늘 아래 두 팔을 벌리고 깊이 허리 숙여 인사하는 두 사람',
+    id: 'closing', alt: '파란 하늘 아래 잔디 언덕에서 나란히 허리 숙여 인사하는 두 사람',
     title: '고맙습니다',
     line: '서로의 가장 가까운 편이 되어\n다정하게 잘 살겠습니다.'
   },
