@@ -11,7 +11,10 @@ http.createServer(async (request, response) => {
     if (segments.some((part) => part.startsWith('.'))) { response.writeHead(403).end(); return; }
     let file = path.resolve(root, `.${pathname}`);
     if (file !== root && !file.startsWith(`${root}${path.sep}`)) { response.writeHead(403).end(); return; }
-    if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html');
+    if ((await stat(file)).isDirectory()) {
+      if (!pathname.endsWith('/')) { response.writeHead(301, { Location: `${pathname}/` }).end(); return; }
+      file = path.join(file, 'index.html');
+    }
     response.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
     response.end(await readFile(file));
   } catch { response.writeHead(404).end('Not found'); }

@@ -48,5 +48,14 @@ const html = (await readFile('index.html', 'utf8'))
   .replace('href="./styles.css"', `href="./styles.css?v=${version}"`)
   .replace('src="./app.js"', `src="./app.js?v=${version}"`);
 await writeFile('dist/index.html', html);
+// The second address, <site>/<gift.path>, is the same page one folder down; app.js shows the accounts there.
+const giftPath = announcement.gift?.path;
+if (giftPath) {
+  if (!/^[a-z0-9-]+$/.test(giftPath)) throw new Error('gift.path 에는 영문 소문자, 숫자, - 만 쓸 수 있습니다.');
+  await mkdir(`dist/${giftPath}`, { recursive: true });
+  await writeFile(`dist/${giftPath}/index.html`, html
+    .replace(/(["' ,])\.\//g, '$1../')
+    .replace(/(<meta property="og:url" content=")[^"]*/, (_, prefix) => `${prefix}${escape(announcement.siteUrl)}${giftPath}/`));
+}
 await writeFile('dist/.nojekyll', '');
 console.log(`Built wedding announcement in dist/ (${photos.length} photos)`);

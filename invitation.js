@@ -103,12 +103,12 @@ export const announcement = {
     line: '서로의 가장 가까운 편이 되어\n다정하게 잘 살겠습니다.'
   },
   // 마음 전하실 곳(계좌번호). 평소 주소에서는 보이지 않고,
-  // 주소 끝에 ?mode=heart 를 붙인 링크로 열었을 때만 보입니다.
-  //   소식만 전하는 링크: https://kaineus.github.io/mobile-invitation/
-  //   계좌가 보이는 링크: https://kaineus.github.io/mobile-invitation/?mode=heart
+  // 주소 뒤에 /p 를 붙인 링크로 열었을 때만 보입니다(path 값을 바꾸면 그 이름의 주소가 됩니다).
+  //   소식만 전하는 링크: <siteUrl>
+  //   계좌가 보이는 링크: <siteUrl>p
   // 주의: 이 저장소는 공개이므로 여기에 적은 계좌번호는 누구나 볼 수 있습니다.
   gift: {
-    mode: 'heart',
+    path: 'p',
     title: '마음 전하실 곳',
     note: '멀리서 마음을 전하고 싶으신 분들을 위해\n조심스럽게 적어 둡니다.',
     // 아래는 자리만 잡아 둔 값입니다. 실제 은행과 계좌번호로 바꿔 주세요.

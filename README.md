@@ -52,11 +52,13 @@ Windows PowerShell에서 `npm.ps1` 실행 정책 오류가 나면 `npm` 대신 `
 | 보낼 링크 | 보이는 내용 |
 | --- | --- |
 | `https://kaineus.github.io/mobile-invitation/` | 소식만 전합니다. 계좌번호는 보이지 않습니다. |
-| `https://kaineus.github.io/mobile-invitation/?mode=heart` | 사진 아래에 "마음 전하실 곳"과 계좌번호, 복사 버튼이 함께 보입니다. |
+| `https://kaineus.github.io/mobile-invitation/p` | 사진 아래에 "마음 전하실 곳"과 계좌번호, 복사 버튼이 함께 보입니다. |
 
 계좌는 `invitation.js`의 `gift.accounts`에 `{ label: '신랑 나동규', bank: '○○은행', number: '000-00-0000000', holder: '나동규' }` 형태로 적습니다. **지금 들어 있는 값은 자리만 잡아 둔 것이니 실제 은행과 계좌번호로 바꿔야 합니다.** 목록을 비우면 두 링크 모두 계좌를 표시하지 않습니다. 페이지 안의 공유·링크 복사 버튼은 지금 열려 있는 주소를 그대로 보냅니다.
 
-**링크를 나눈 것일 뿐 잠금 장치가 아닙니다.** 주소 끝에 `?mode=heart`를 붙이면 누구나 볼 수 있고, 이 저장소는 공개 저장소라 적어 둔 계좌번호는 코드와 git 기록에도 남습니다.
+`/p`는 `invitation.js`의 `gift.path` 값이며, 빌드할 때 같은 페이지가 `p/` 폴더에도 만들어집니다. 그래서 `npm run dev`(빌드 없이 원본을 그대로 보여 줌)에서는 `/p` 대신 `/?mode=p`로 확인하고, 실제와 똑같이 보려면 `npm run build` 후 `npm run preview`로 `/p`를 여세요.
+
+**링크를 나눈 것일 뿐 잠금 장치가 아닙니다.** 주소 뒤에 `/p`를 붙이면 누구나 볼 수 있고, 이 저장소는 공개 저장소라 적어 둔 계좌번호는 코드와 git 기록에도 남습니다.
 
 ### 사진 바꾸기
 

@@ -45,7 +45,8 @@ $('#letter-message').replaceChildren(...data.message.map((line, index) => {
 }));
 
 // Photos: every id has a 640px and a 1280px WebP (see scripts/photos.mjs).
-const photoUrl = (id, width) => `./assets/photos/${id}-${width}.webp`;
+// Resolved against this script, not the page, so the same photos load from the page one folder down too.
+const photoUrl = (id, width) => new URL(`./assets/photos/${id}-${width}.webp`, import.meta.url).href;
 function photoImage(photo, sizes) {
   const img = new Image();
   img.alt = photo.alt;
@@ -309,9 +310,13 @@ $('#share').addEventListener('click', async () => {
   await copy(pageUrl(), '링크를 복사했습니다.');
 });
 
-// Two links, one page: the accounts appear only when the address carries ?mode=<gift.mode>.
+// Two links, one page: the accounts appear only at <site>/<gift.path>, which the build publishes as the
+// same page one folder down. (?mode=<gift.path> does the same where that folder does not exist, as in `npm run dev`.)
 const gift = data.gift ?? {};
-if (gift.accounts?.length && new URLSearchParams(window.location.search).get('mode') === gift.mode) {
+const folder = window.location.pathname.replace(/index\.html$/, '').replace(/\/+$/, '');
+const giftLink = Boolean(gift.path) && (folder.endsWith(`/${gift.path}`)
+  || new URLSearchParams(window.location.search).get('mode') === gift.path);
+if (gift.accounts?.length && giftLink) {
   text('#gift-title', gift.title);
   text('#gift-note', gift.note);
   for (const account of gift.accounts) {
