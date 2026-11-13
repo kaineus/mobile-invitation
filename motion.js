@@ -153,20 +153,40 @@ function crackle(frame, layer, [x, y]) {
   });
 }
 
-// Rows of photos drift sideways on their own until someone takes over, which also shows they can be swiped.
+// Rows of photos drift sideways on their own, and keep drifting while the page is scrolled past them.
+// Only moving a row by hand takes over (a sideways swipe, a sideways wheel, the keyboard);
+// a moment after it is let go, the row drifts on from wherever it was left.
+const RESUME_AFTER = 1800;
 const drifting = [];
 export function drift(strip, speed) {
   if (!motion) return;
-  const row = { strip, speed, position: 0, visible: false, done: false };
-  const stop = () => {
-    row.done = true;
-    strip.classList.remove('drifting');
+  const row = { strip, speed, position: 0, applied: 0, visible: false, swiping: false, focused: false, restUntil: 0 };
+  let touch;
+  strip.addEventListener('touchstart', (event) => { touch = event.touches[0]; }, { passive: true });
+  strip.addEventListener('touchmove', (event) => {
+    if (!touch || row.swiping) return;
+    const across = Math.abs(event.touches[0].clientX - touch.clientX);
+    const down = Math.abs(event.touches[0].clientY - touch.clientY);
+    // A finger travelling down the page is scrolling the page, not this row.
+    if (across > 6 && across > down) row.swiping = true;
+  }, { passive: true });
+  const letGo = () => {
+    if (row.swiping) row.restUntil = performance.now() + RESUME_AFTER;
+    row.swiping = false;
+    touch = undefined;
   };
-  for (const type of ['pointerdown', 'touchstart', 'wheel', 'focusin']) strip.addEventListener(type, stop, { once: true, passive: true });
+  strip.addEventListener('touchend', letGo, { passive: true });
+  strip.addEventListener('touchcancel', letGo, { passive: true });
+  strip.addEventListener('wheel', (event) => {
+    if (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) row.restUntil = performance.now() + RESUME_AFTER;
+  }, { passive: true });
+  // Someone tabbing through the photos should not have them slide out from under the focus ring.
+  strip.addEventListener('focusin', (event) => { row.focused = event.target.matches(':focus-visible'); });
+  strip.addEventListener('focusout', () => { row.focused = false; });
   strip.classList.add('drifting');
   new IntersectionObserver(([entry]) => {
     row.visible = entry.isIntersecting;
-    if (row.visible) row.position = strip.scrollLeft;
+    if (row.visible) row.position = row.applied = strip.scrollLeft;
   }).observe(strip);
   drifting.push(row);
   if (drifting.length === 1) requestAnimationFrame(glide);
@@ -176,15 +196,23 @@ function glide(now) {
   const step = Math.min((now - glidedAt) / 1000, 0.05);
   glidedAt = now;
   for (const row of drifting) {
-    if (row.done || !row.visible) continue;
+    if (!row.visible) continue;
     const end = row.strip.scrollWidth - row.strip.clientWidth;
     if (end <= 0) continue;
+    // If the row is not where it was last put, a hand moved it (swipe momentum, scrollbar, keyboard).
+    const actual = row.strip.scrollLeft;
+    if (Math.abs(actual - row.applied) > 2) row.restUntil = now + RESUME_AFTER;
+    if (row.swiping || row.focused || now < row.restUntil) {
+      row.position = row.applied = actual;
+      continue;
+    }
     row.position += row.speed * step;
     if (row.position >= end || row.position <= 0) {
       row.position = Math.max(0, Math.min(end, row.position));
       row.speed = -row.speed;
     }
     row.strip.scrollLeft = row.position;
+    row.applied = row.strip.scrollLeft;
   }
-  if (drifting.some((row) => !row.done)) requestAnimationFrame(glide);
+  requestAnimationFrame(glide);
 }
