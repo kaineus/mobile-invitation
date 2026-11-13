@@ -7,13 +7,16 @@ export const announcement = {
   // 첫 화면에서 한 번 터지는 꽃가루. false 로 끌 수 있습니다.
   welcomeConfetti: true,
   // family 는 선택 사항입니다. 예: '나○○ · 김○○의 아들'
+  // shades 는 소개 사진을 누르면(처음 보일 때는 저절로) 바뀌는 선글라스 사진입니다. 빼면 바뀌지 않습니다.
   groom: {
     name: '나동규', english: 'Wayne', family: '',
-    portrait: { id: 'portrait-groom', alt: '짙은 정장에 꽃을 달고 웃는 신랑 나동규' }
+    portrait: { id: 'portrait-groom', alt: '짙은 정장에 꽃을 달고 웃는 신랑 나동규' },
+    shades: { id: 'shades-groom', alt: '검은 선글라스를 쓰고 씩 웃는 신랑 나동규' }
   },
   bride: {
     name: '이엄지', english: 'Thumb', family: '',
-    portrait: { id: 'portrait-bride', alt: '하얀 드레스를 입고 환하게 웃는 신부 이엄지' }
+    portrait: { id: 'portrait-bride', alt: '하얀 드레스를 입고 환하게 웃는 신부 이엄지' },
+    shades: { id: 'shades-bride', alt: '검은 선글라스를 쓰고 활짝 웃는 신부 이엄지' }
   },
   // 결혼식을 진행하지 않으므로 시간 없는 날짜를 사용합니다.
   date: '2027-02-14',
@@ -33,12 +36,14 @@ export const announcement = {
   ],
   cover: { id: 'cover', alt: '파란 하늘 아래 잔디 언덕에서 나란히 허리 숙여 인사하는 두 사람' },
   intro: {
+    // 소개 사진 아래에 크게 보이는 한 장.
+    lead: { id: 'studio-sunglasses', alt: '검은 선글라스를 쓰고 장난스럽게 선 두 사람' },
     photos: [
       { id: 'studio-glance', alt: '손을 잡고 서로를 바라보며 웃는 두 사람' },
       { id: 'studio-ribbon', alt: '하늘색 리본을 두르고 턱을 괸 채 웃는 두 사람' },
       { id: 'studio-wink', alt: '신랑 머리 위에 손을 얹고 윙크하는 신부' },
       { id: 'studio-confetti', alt: '색종이가 흩날리는 바닥에 앉아 볼에 입 맞추는 두 사람' },
-      { id: 'studio-sunglasses', alt: '검은 선글라스를 쓰고 장난스럽게 선 두 사람' },
+      { id: 'studio-shades-close', alt: '선글라스를 쓴 채 마주 보며 웃는 두 사람' },
       { id: 'studio-veil', alt: '면사포 아래에서 마주 보며 웃는 두 사람' }
     ]
   },

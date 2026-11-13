@@ -11,11 +11,12 @@ if (!/^https:\/\/.+\/$/.test(announcement.siteUrl)) throw new Error('siteUrl은 
 
 // Every photo named in invitation.js must exist in both sizes, or the page would show a gap.
 const photos = [
-  announcement.cover, announcement.closing, announcement.groom.portrait, announcement.bride.portrait, ...announcement.intro.photos,
+  announcement.cover, announcement.closing, announcement.groom.portrait, announcement.bride.portrait, announcement.groom.shades, announcement.bride.shades,
+  announcement.intro.lead, ...announcement.intro.photos,
   ...announcement.gallery.flatMap((group) => [group.lead, ...group.photos])
 ];
 const missing = [];
-for (const { id } of photos) {
+for (const { id } of photos.filter(Boolean)) {
   for (const size of [640, 1280]) {
     const file = `assets/photos/${id}-${size}.webp`;
     await access(file).catch(() => missing.push(file));

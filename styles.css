@@ -426,6 +426,21 @@ h2 {
   border-radius:999px 999px 4px 4px;
 }
 
+/* The sunglasses photo lies over the portrait and shows once the frame has turned edge-on. */
+.portrait-photo .shades {
+  position:absolute;
+  inset:0;
+  opacity:0;
+}
+
+.portrait-photo.on .shades {
+  opacity:1;
+}
+
+.intro .strip {
+  margin-top:6px;
+}
+
 .portrait figcaption {
   display:flex;
   flex-direction:column;
@@ -834,6 +849,21 @@ dialog {
 @keyframes heart-bob {
   50% {
     transform:translateY(-4px) scale(1.06);
+  }
+}
+
+/* A portrait turns edge-on, swaps photos at the midpoint, and turns back. */
+.motion .portrait-photo .shades {
+  transition:opacity 0s .22s;
+}
+
+.motion .portrait-photo.turn {
+  animation:turn .44s ease-in-out;
+}
+
+@keyframes turn {
+  50% {
+    transform:perspective(700px) rotateY(90deg);
   }
 }
 

@@ -81,7 +81,50 @@ for (const role of ['bride', 'groom']) {
     text(`[data-${role}-family]`, data[role].family);
     $(`[data-${role}-family]`).hidden = false;
   }
-  $(`#portrait-${role}`).replaceWith(photoButton(data[role].portrait, 'portrait-photo', halfWidth));
+}
+
+// Introductions: the portraits turn over to the same two people in sunglasses, on a tap
+// and once by themselves shortly after they come into view. The two always change together,
+// because one person alone in sunglasses just looks odd.
+function portrait(person) {
+  if (!person.shades) return { button: photoButton(person.portrait, 'portrait-photo', halfWidth), wear() {} };
+  const button = make('button', 'portrait-photo');
+  const shades = photoImage(person.shades, halfWidth);
+  shades.className = 'shades';
+  button.type = 'button';
+  button.append(photoImage(person.portrait, halfWidth), shades);
+  const wear = (on) => {
+    button.classList.toggle('on', on);
+    button.setAttribute('aria-pressed', on);
+    button.setAttribute('aria-label', `${(on ? person.shades : person.portrait).alt}. 누르면 두 사람 사진이 함께 바뀝니다`);
+    // Restart the turn even when it is already mid-way.
+    button.classList.remove('turn');
+    void button.offsetWidth;
+    button.classList.add('turn');
+  };
+  wear(false);
+  button.classList.remove('turn');
+  return { button, wear };
+}
+const portraits = ['bride', 'groom'].map((role) => {
+  const made = portrait(data[role]);
+  $(`#portrait-${role}`).replaceWith(made.button);
+  return made;
+});
+let wearing = false;
+function wearTogether(on, first = portraits[0]) {
+  wearing = on;
+  first.wear(on);
+  // The other follows a beat later, like a glance and then "me too".
+  for (const other of portraits) if (other !== first) setTimeout(() => other.wear(wearing), 260);
+}
+for (const made of portraits) made.button.addEventListener('click', () => wearTogether(!wearing, made));
+onEnter($('.portraits'), 0.6, () => setTimeout(() => wearTogether(true), 1300));
+
+if (data.intro.lead) {
+  const lead = photoButton(data.intro.lead, 'lead', fullWidth);
+  onEnter(lead, 0.9);
+  $('#intro-lead').replaceWith(lead);
 }
 $('#intro-strip').replaceWith(makeStrip(data.intro.photos, '사진관에서 찍은 사진', 20));
 
